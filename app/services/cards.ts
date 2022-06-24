@@ -16,7 +16,7 @@ import axios from 'axios';
 // });
 
 export async function hearthStoneInfo(text: string) {
-  return await axios({
+  const result =  await axios({
     method: 'GET',
     url: text,
     baseURL: process.env.API_HEARTH_STONE,
@@ -25,6 +25,7 @@ export async function hearthStoneInfo(text: string) {
       'X-RapidAPI-Host': 'omgvamp-hearthstone-v1.p.rapidapi.com'
     }
   });
+  return result;
 }
 
 export default {
