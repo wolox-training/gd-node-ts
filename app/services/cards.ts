@@ -10,13 +10,13 @@ import axios from 'axios';
 // };
 
 // axios.request(options).then(function (response) {
-// 	console.log(response.data);
+// console.log(response.data);
 // }).catch(function (error) {
-// 	console.error(error);
+// console.error(error);
 // });
 
 export async function hearthStoneInfo(text: string) {
-  await axios({
+  return await axios({
     method: 'GET',
     url: text,
     baseURL: process.env.API_HEARTH_STONE,
@@ -24,7 +24,7 @@ export async function hearthStoneInfo(text: string) {
       'X-RapidAPI-Key': 'SIGN-UP-FOR-KEY',
       'X-RapidAPI-Host': 'omgvamp-hearthstone-v1.p.rapidapi.com'
     }
-  })
+  });
 }
 
 export default {
