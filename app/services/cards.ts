@@ -1,50 +1,18 @@
 import axios from 'axios';
+import { Info, Allcards } from '../constants';
 
-export interface Info {
-  type: string;
-  properties: Properties;
-}
-
-export interface Properties {
-  patch: Patch;
-  classes: Classes;
-  sets: Classes;
-  types: Classes;
-  factions: Classes;
-  qualities: Classes;
-  races: Classes;
-  locales: Classes;
-}
-
-export interface Classes {
-  type: string;
-  items: Patch;
-}
-
-export interface Patch {
-  type: string;
-}
-
-// export interface Options {
-//   method:  string;
-//   url:     UrlApi;
-//   headers: Headers;
-// }
-
-// export interface Headers {
-//   "X-RapidAPI-Key":  string;
-//   "X-RapidAPI-Host": string;
-// }
-
-// export interface UrlApi {
-//   type: string;
-// }
-
-const urlApi = `${process.env.API_HEARTH_STONE}?format=json`;
-
-const options = {
+const info = {
   method: 'GET',
-  url: urlApi,
+  url: process.env.API_HEARTH_STONE_INFO,
+  headers: {
+    'X-RapidAPI-Key': process.env.API_HEARTH_STONE_KEY,
+    'X-RapidAPI-Host': process.env.API_HEARTH_STONE_HOST
+  }
+} as const;
+
+const allCards = {
+  method: 'GET',
+  url: process.env.API_HEARTH_STONE_CARDS,
   headers: {
     'X-RapidAPI-Key': process.env.API_HEARTH_STONE_KEY,
     'X-RapidAPI-Host': process.env.API_HEARTH_STONE_HOST
@@ -52,10 +20,16 @@ const options = {
 } as const;
 
 export const getInfo = async (): Promise<Info> => {
-  const response = await axios.request(options);
+  const response = await axios.request(info);
+  return response.data;
+};
+
+export const getAllCard = async (): Promise<Allcards> => {
+  const response = await axios.request(allCards);
   return response.data;
 };
 
 export default {
-  getInfo
+  getInfo,
+  getAllCard
 };
