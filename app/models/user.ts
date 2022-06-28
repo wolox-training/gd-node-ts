@@ -5,28 +5,28 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ 
+  @Column({
     type: 'varchar',
-    nullable:false
+    nullable: false
   })
   username: string;
 
-  @Column({ 
+  @Column({
     type: 'varchar',
-    nullable:false
+    nullable: false
   })
   lastname: string;
 
-  @Column({ 
-    type:'varchar',
+  @Column({
+    type: 'varchar',
     unique: true,
     nullable: false
   })
   email: string;
 
-  @Column({ 
+  @Column({
     type: 'varchar',
-    nullable:false
+    nullable: false
   })
   password: string;
 }

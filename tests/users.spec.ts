@@ -3,7 +3,22 @@ import userRepository from '../app/services/users';
 import app from '../app';
 
 describe('users', () => {
-  beforeEach(() => userRepository.createMany([{ username: 'u1' }, { username: 'u2' }]));
+  beforeEach(() =>
+    userRepository.createMany([
+      {
+        username: 'u1',
+        lastname: 'u1',
+        email: 'u1@u1.com',
+        password: 'u1'
+      },
+      {
+        username: 'u2',
+        lastname: 'u2',
+        email: 'u2@u2.com',
+        password: 'u2'
+      }
+    ])
+  );
   describe('/users GET', () => {
     it('should return all users', (done: jest.DoneCallback) => {
       request(app)
@@ -19,10 +34,20 @@ describe('users', () => {
     it('should create an user', (done: jest.DoneCallback) => {
       request(app)
         .post('/users')
-        .send({ username: 'u3' })
+        .send({
+          username: 'u3',
+          lastname: 'u3',
+          email: 'u3@u3.com',
+          password: 'u3'
+        })
         .expect(201)
         .then(async () => {
-          const user = await userRepository.findUser({ username: 'u3' });
+          const user = await userRepository.findUser({
+            username: 'u3',
+            lastname: 'u3',
+            email: 'u3@u3.com',
+            password: 'u3'
+          });
           expect(user).not.toBeNull();
           done();
         });
