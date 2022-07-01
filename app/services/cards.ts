@@ -1,31 +1,24 @@
-import axios from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 import { Info, Allcards } from '../constants';
 
-const info = {
-  method: 'GET',
-  url: process.env.API_HEARTH_STONE_INFO,
-  headers: {
-    'X-RapidAPI-Key': process.env.API_HEARTH_STONE_KEY,
-    'X-RapidAPI-Host': process.env.API_HEARTH_STONE_HOST
-  }
-} as const;
+const options = (apiPath: string, apiMethod: string): object =>
+  ({
+    method: apiMethod,
+    url: apiPath,
+    baseURL: process.env.API_HS_URL,
+    headers: {
+      'X-RapidAPI-Key': process.env.API_HS_KEY,
+      'X-RapidAPI-Host': process.env.API_HS_HOST
+    }
+  } as AxiosRequestConfig);
 
-const allCards = {
-  method: 'GET',
-  url: process.env.API_HEARTH_STONE_CARDS,
-  headers: {
-    'X-RapidAPI-Key': process.env.API_HEARTH_STONE_KEY,
-    'X-RapidAPI-Host': process.env.API_HEARTH_STONE_HOST
-  }
-} as const;
-
-export const getInfo = async (): Promise<Info> => {
-  const response = await axios.request(info);
+export const getInfo = async (apiPath: string, apiMethod: string): Promise<Info> => {
+  const response = await axios.request(options(apiPath, apiMethod));
   return response.data;
 };
 
-export const getAllCard = async (): Promise<Allcards> => {
-  const response = await axios.request(allCards);
+export const getAllCard = async (apiPath: string, apiMethod: string): Promise<Allcards> => {
+  const response = await axios.request(options(apiPath, apiMethod));
   return response.data;
 };
 
