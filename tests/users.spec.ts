@@ -8,14 +8,14 @@ describe('users', () => {
       {
         username: 'u1',
         lastname: 'u1',
-        email: 'u1@u1.com',
-        password: 'u1'
+        email: 'u1@wolox.com',
+        password: 'u1U1u1U1'
       },
       {
         username: 'u2',
         lastname: 'u2',
-        email: 'u2@u2.com',
-        password: 'u2'
+        email: 'u2@wolox.com',
+        password: 'u2U2u2U2'
       }
     ])
   );
@@ -37,16 +37,16 @@ describe('users', () => {
         .send({
           username: 'u3',
           lastname: 'u3',
-          email: 'u3@u3.com',
-          password: 'u3'
+          email: 'u3@wolox.com',
+          password: 'u3U3u3U3'
         })
         .expect(201)
         .then(async () => {
           const user = await userRepository.findUser({
             username: 'u3',
             lastname: 'u3',
-            email: 'u3@u3.com',
-            password: 'u3'
+            email: 'u3@wolox.com',
+            password: 'u3U3u3U3'
           });
           expect(user).not.toBeNull();
           done();
