@@ -5,6 +5,7 @@ import userService from '../services/users';
 import { User } from '../models/user';
 import { notFoundError } from '../errors';
 import { HTTP_CODES } from '../constants';
+import { successful } from '../constants/messages';
 import logger from '../logger';
 
 export function getUsers(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
@@ -21,7 +22,7 @@ export function createUser(req: Request, res: Response, next: NextFunction): Pro
     .then((user: User) => {
       if (user) {
         logger.info(HTTP_CODES.CREATED);
-        res.status(HttpStatus.CREATED).send({ user: user.username });
+        res.status(HttpStatus.CREATED).send(successful.CREATED);
       }
       logger.error(HTTP_CODES.BAD_REQUEST);
       res.status(HttpStatus.BAD_REQUEST).send(HTTP_CODES.BAD_REQUEST);
