@@ -8,6 +8,12 @@ import { error } from '../constants/messages';
 
 export function validate(): ValidationChain[] {
   return [
+    body('username')
+      .notEmpty()
+      .withMessage(error.EMPTY),
+    body('lastname')
+      .notEmpty()
+      .withMessage(error.EMPTY),
     body('email')
       .notEmpty()
       .withMessage(error.EMPTY)
