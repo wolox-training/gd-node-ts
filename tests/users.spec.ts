@@ -52,7 +52,7 @@ describe('users', () => {
           done();
         });
     });
-    it('should return error for user already in use', (done: jest.DoneCallback) => {
+    it('should return error for user email already in use', (done: jest.DoneCallback) => {
       request(app)
         .post('/users')
         .send({
@@ -65,6 +65,47 @@ describe('users', () => {
         .then((res: request.Response) => {
           expect(res.body).toStrictEqual({
             errors: [{ location: 'body', msg: 'Already in use', param: 'email', value: 'u2@wolox.com' }]
+          });
+          done();
+        });
+    });
+    it('should return error for user because password is invalid', (done: jest.DoneCallback) => {
+      request(app)
+        .post('/users')
+        .send({
+          username: 'u3',
+          lastname: 'u3',
+          email: 'u3@wolox.com',
+          password: '1234'
+        })
+        .expect(400)
+        .then((res: request.Response) => {
+          expect(res.body).toStrictEqual({
+            errors: [{ location: 'body', msg: 'Should be alphanumeric', param: 'password', value: '1234' }]
+          });
+          done();
+        });
+    });
+    it('should return error for user because all fields are empty', (done: jest.DoneCallback) => {
+      request(app)
+        .post('/users')
+        .send({
+          username: '',
+          lastname: '',
+          email: '',
+          password: ''
+        })
+        .expect(400)
+        .then((res: request.Response) => {
+          expect(res.body).toStrictEqual({
+            errors: [
+              { location: 'body', msg: 'Cannot be empty', param: 'username', value: '' },
+              { location: 'body', msg: 'Cannot be empty', param: 'lastname', value: '' },
+              { location: 'body', msg: 'Cannot be empty', param: 'email', value: '' },
+              { location: 'body', msg: 'Invalid format', param: 'email', value: '' },
+              { location: 'body', msg: 'Invalid format', param: 'email', value: '' },
+              { location: 'body', msg: 'Should be alphanumeric', param: 'password', value: '' }
+            ]
           });
           done();
         });
