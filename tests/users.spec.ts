@@ -52,6 +52,23 @@ describe('users', () => {
           done();
         });
     });
+    it('should return error for user already in use', (done: jest.DoneCallback) => {
+      request(app)
+        .post('/users')
+        .send({
+          username: 'u2',
+          lastname: 'u2',
+          email: 'u2@wolox.com',
+          password: 'u2U2u2U2'
+        })
+        .expect(400)
+        .then((res: request.Response) => {
+          expect(res.body).toStrictEqual({
+            errors: [{ location: 'body', msg: 'Already in use', param: 'email', value: 'u2@wolox.com' }]
+          });
+          done();
+        });
+    });
     describe('/users/:id GET', () => {
       it('should return user with id 1', (done: jest.DoneCallback) => {
         request(app)
