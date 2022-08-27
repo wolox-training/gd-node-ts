@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import HttpStatus from 'http-status-codes';
 
 import userService from '../services/users';
+import { getToken } from '../services/session';
 import { User } from '../models/user';
 import { notFoundError } from '../errors';
 import { HTTP_CODES } from '../constants';
@@ -41,6 +42,24 @@ export function getUserById(req: Request, res: Response, next: NextFunction): Pr
         throw notFoundError('User not found');
       }
       return res.send(user);
+    })
+    .catch(next);
+}
+
+export function getUserByEmail(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
+  return userService
+    .findUser({ email: req.body.email })
+    .then((user: User) => {
+      if (!user) {
+        throw notFoundError('User e-mail not found');
+      }
+      const userObject = { ...user } as Partial<User>;
+      delete userObject.password;
+      const payload = userObject;
+      const key = process.env.key as string;
+      const algorithm = process.env.algorithm as string;
+      const token = getToken(payload, key, algorithm);
+      return res.status(200).send({ message: 'Login successfully', token });
     })
     .catch(next);
 }

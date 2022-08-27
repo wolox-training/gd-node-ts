@@ -24,7 +24,7 @@
     "pretest": "npm run lint",
     "dev": "ts-node-dev --respawn --transpileOnly ./server.ts",
     "start": "npm run build && node ./dist/server.js",
-    "test": "npm run test-basic -- --runInBand",
+    "test": "npm run test-basic -- --runInBand --verbose",
     "test-basic": "NODE_ENV=testing jest --forceExit --detectOpenHandles --verbose",
     "test-inspect": "NODE_ENV=testing node --inspect --debug-brk --detectOpenHandles jest"
   },

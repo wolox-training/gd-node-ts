@@ -14,7 +14,12 @@ export function decode<T>(toDecode: string): T {
   return jwt.decode(toDecode, SECRET);
 }
 
+export function getToken(payload: object, key: string, algorithm: string): string {
+  return jwt.encode(payload, key, algorithm);
+}
+
 export default {
   encode,
-  decode
+  decode,
+  getToken
 };
