@@ -10,9 +10,23 @@ import { successful } from '../constants/messages';
 import logger from '../logger';
 
 export function getUsers(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
+  const options = {
+    order: {
+      id: req.query.order || 'DESC'
+    },
+    take: req.query.limit || 3,
+    skip: req.query.skip || 0
+  };
   return userService
-    .findAll()
-    .then((users: User[]) => res.send(users))
+    .findAll(options)
+    .then((users: User[]) => {
+      const userMapped = users.map((el: User) => {
+        const userObjet = { ...el } as Partial<User>;
+        delete userObjet.password;
+        return userObjet;
+      });
+      res.send(userMapped);
+    })
     .catch(next);
 }
 
@@ -24,9 +38,10 @@ export function createUser(req: Request, res: Response, next: NextFunction): Pro
       if (user) {
         logger.info(HTTP_CODES.CREATED);
         res.status(HttpStatus.CREATED).send(successful.CREATED);
+      } else {
+        logger.error(HTTP_CODES.BAD_REQUEST);
+        res.status(HttpStatus.BAD_REQUEST).send(HTTP_CODES.BAD_REQUEST);
       }
-      logger.error(HTTP_CODES.BAD_REQUEST);
-      res.status(HttpStatus.BAD_REQUEST).send(HTTP_CODES.BAD_REQUEST);
     })
     .catch((err: Error) => {
       logger.error({ error: err, message: HTTP_CODES.INTERNAL_SERVER_ERROR });
