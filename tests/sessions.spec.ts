@@ -10,13 +10,15 @@ describe('session', () => {
         username: 'u1',
         lastname: 'u1',
         email: 'u1@wolox.com',
-        password: bcrypt.hashSync('u1U1u1U1', 10)
+        password: bcrypt.hashSync('u1U1u1U1', 10),
+        role: 'standard'
       },
       {
         username: 'u2',
         lastname: 'u2',
         email: 'u2@wolox.com',
-        password: bcrypt.hashSync('u2U2u2U2', 10)
+        password: bcrypt.hashSync('u2U2u2U2', 10),
+        role: 'standard'
       }
     ])
   );
@@ -33,7 +35,7 @@ describe('session', () => {
           expect(res.body).toStrictEqual({
             message: 'Login successfully',
             token:
-              'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJ1MSIsImxhc3RuYW1lIjoidTEiLCJlbWFpbCI6InUxQHdvbG94LmNvbSJ9.EqfbcdLg1Fs5DNSc2r8NC7QQLnfJ-lGqorBwNpZSm4g'
+              'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJ1MSIsImxhc3RuYW1lIjoidTEiLCJlbWFpbCI6InUxQHdvbG94LmNvbSIsInJvbGUiOiJzdGFuZGFyZCJ9.UAHPyTxknEl8a5dWKseadItZ-4EgIDan_q4b8QnqHXs'
           });
           done();
         });

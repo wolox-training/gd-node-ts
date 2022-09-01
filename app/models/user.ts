@@ -29,4 +29,11 @@ export class User {
     nullable: false
   })
   password: string;
+
+  @Column({
+    type: 'varchar',
+    nullable: false,
+    default: 'standard'
+  })
+  role: string;
 }

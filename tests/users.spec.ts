@@ -10,13 +10,15 @@ describe('users', () => {
         username: 'u1',
         lastname: 'u1',
         email: 'u1@wolox.com',
-        password: bcrypt.hashSync('u1U1u1U1', 10)
+        password: bcrypt.hashSync('u1U1u1U1', 10),
+        role: 'standard'
       },
       {
         username: 'u2',
         lastname: 'u2',
         email: 'u2@wolox.com',
-        password: bcrypt.hashSync('u2U2u2U2', 10)
+        password: bcrypt.hashSync('u2U2u2U2', 10),
+        role: 'standard'
       }
     ])
   );
@@ -24,9 +26,22 @@ describe('users', () => {
     it('should return all users', (done: jest.DoneCallback) => {
       request(app)
         .get('/users')
+        .set(
+          'Authorization',
+          'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJqb2huIiwibGFzdG5hbWUiOiJkb3ciLCJlbWFpbCI6ImpvaG4uZG93QHdvbG94LmNvbSIsInJvbGUiOiJzdGFuZGFyZCJ9.3VLXNit8C6VsMixaHa6Ho-euevoKKZZqwWrn_FkHfsw'
+        )
         .expect(200)
         .then((res: request.Response) => {
           expect(res.body.length).toBe(2);
+          done();
+        });
+    });
+    it('should return error because token missing', (done: jest.DoneCallback) => {
+      request(app)
+        .get('/users')
+        .expect(400)
+        .then((res: request.Response) => {
+          expect(res.body).toStrictEqual({ message: 'token is required' });
           done();
         });
     });
