@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs';
 import { body, ValidationChain, validationResult } from 'express-validator';
 import { Response, Request, NextFunction } from 'express';
 import { FindConditions } from 'typeorm';
+import { decodeToken } from '../services/session';
 
 import { User } from '../models/user';
 import { findUser } from '../services/users';
@@ -79,8 +80,36 @@ export function checkUser(req: Request, res: Response, next: NextFunction): Resp
   return next();
 }
 
+export function isStandard(req: Request, res: Response, next: NextFunction): Response | NextFunction | void {
+  if (req.headers.authorization) {
+    const token = req.headers.authorization.split(' ')[1];
+    const { key } = process.env;
+    const user = decodeToken(token, key as string);
+    if (user.role === 'standard') {
+      return next();
+    }
+    return res.status(400).json({ message: 'Permmission is not allowed' });
+  }
+  return res.status(400).json({ message: 'token is required' });
+}
+
+export function isAdmin(req: Request, res: Response, next: NextFunction): Response | NextFunction | void {
+  if (req.headers.authorization) {
+    const token = req.headers.authorization.split(' ')[1];
+    const { key } = process.env;
+    const user = decodeToken(token, key as string);
+    if (user.role === 'admin') {
+      return next();
+    }
+    return res.status(400).json({ message: 'Permmission is not allowed' });
+  }
+  return res.status(400).json({ message: 'token is required' });
+}
+
 export default {
   checkUser,
   validateSignUp,
-  validateSignIn
+  validateSignIn,
+  isStandard,
+  isAdmin
 };
