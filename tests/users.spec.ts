@@ -59,10 +59,7 @@ describe('users', () => {
         .expect(201)
         .then(async () => {
           const user = await userRepository.findUser({
-            username: 'u3',
-            lastname: 'u3',
-            email: 'u3@wolox.com',
-            password: bcrypt.hashSync('u3U3u3U3', 10)
+            email: 'u3@wolox.com'
           });
           expect(user).not.toBeNull();
           done();

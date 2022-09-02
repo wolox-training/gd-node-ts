@@ -51,7 +51,6 @@ export function createUser(req: Request, res: Response, next: NextFunction): Pro
 }
 
 export async function adminUser(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
-  // const { username, lastname, email, password } = req.body;
   req.body.role = 'admin';
   const userAdmin = req.body;
   const userToFind = await userService.findUser({ email: req.body.email });
