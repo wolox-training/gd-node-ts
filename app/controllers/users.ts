@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import HttpStatus from 'http-status-codes';
 
+import { UpdateResult } from 'typeorm';
 import userService from '../services/users';
 import { getToken } from '../services/session';
 import { User } from '../models/user';
@@ -49,11 +50,30 @@ export function createUser(req: Request, res: Response, next: NextFunction): Pro
     });
 }
 
-export function adminUser(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
-  const { username, lastname, email, password } = req.body;
-  const role = 'admin';
+export async function adminUser(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
+  // const { username, lastname, email, password } = req.body;
+  req.body.role = 'admin';
+  const userAdmin = req.body;
+  const userToFind = await userService.findUser({ email: req.body.email });
+  if (userToFind) {
+    return userService
+      .updateOne(userToFind.id, userAdmin)
+      .then((user: UpdateResult) => {
+        if (user) {
+          logger.info(HTTP_CODES.CREATED);
+          res.status(HttpStatus.CREATED).send(successful.UPDATED);
+        } else {
+          logger.error(HTTP_CODES.BAD_REQUEST);
+          res.status(HttpStatus.BAD_REQUEST).send(HTTP_CODES.BAD_REQUEST);
+        }
+      })
+      .catch((err: Error) => {
+        logger.error({ error: err, message: HTTP_CODES.INTERNAL_SERVER_ERROR });
+        next;
+      });
+  }
   return userService
-    .createAndSave({ username, lastname, email, password, role } as User)
+    .createAndSave(userAdmin as User)
     .then((user: User) => {
       if (user) {
         logger.info(HTTP_CODES.CREATED);
