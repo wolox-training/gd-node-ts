@@ -126,6 +126,7 @@ export function isAdmin(req: Request, res: Response, next: NextFunction): Respon
     const token = req.headers.authorization.split(' ')[1];
     const { key } = process.env;
     const user = decodeToken(token, key as string);
+    console.log('algo');
     if (user.role === 'admin') {
       return next();
     }
