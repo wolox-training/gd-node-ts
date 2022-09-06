@@ -22,7 +22,7 @@ describe('users', () => {
       }
     ])
   );
-  describe('/admin/users POST', () => {
+  describe.skip('/admin/users POST', () => {
     it('should create an admin user', (done: jest.DoneCallback) => {
       request(app)
         .post('/admin/users')

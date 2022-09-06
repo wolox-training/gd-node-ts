@@ -23,7 +23,7 @@ describe('users', () => {
     ])
   );
   describe('/users GET', () => {
-    it('should return all users', (done: jest.DoneCallback) => {
+    it.skip('should return all users', (done: jest.DoneCallback) => {
       request(app)
         .get('/users')
         .set(
