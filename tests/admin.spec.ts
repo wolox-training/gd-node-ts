@@ -11,7 +11,7 @@ describe('users', () => {
         lastname: 'u1',
         email: 'u1@wolox.com',
         password: bcrypt.hashSync('u1U1u1U1', 10),
-        role: 'standard'
+        role: 'admin'
       },
       {
         username: 'u2',
@@ -22,13 +22,13 @@ describe('users', () => {
       }
     ])
   );
-  describe.skip('/admin/users POST', () => {
+  describe('/admin/users POST', () => {
     it('should create an admin user', (done: jest.DoneCallback) => {
       request(app)
         .post('/admin/users')
         .set(
           'Authorization',
-          'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJqb2huIiwibGFzdG5hbWUiOiJkb3ciLCJlbWFpbCI6ImpvaG4uZG93QHdvbG94LmNvbSIsInJvbGUiOiJhZG1pbiJ9.MWeUu0OO-bkB0ByLjMXRYiJH5fQ-ykL8iEkN6HNOBRQ'
+          'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MywidXNlcm5hbWUiOiJ1MSIsImxhc3RuYW1lIjoidTEiLCJlbWFpbCI6InUxQHdvbG94LmNvbSIsInJvbGUiOiJhZG1pbiJ9.5UcO34UJ7eLu5eqNfIcRbiUeBJddjpo75EHRNSFU0Z0'
         )
         .send({
           username: 'u3',
@@ -51,7 +51,7 @@ describe('users', () => {
         .post('/admin/users')
         .set(
           'Authorization',
-          'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJqb2huIiwibGFzdG5hbWUiOiJkb3ciLCJlbWFpbCI6ImpvaG4uZG93QHdvbG94LmNvbSIsInJvbGUiOiJhZG1pbiJ9.MWeUu0OO-bkB0ByLjMXRYiJH5fQ-ykL8iEkN6HNOBRQ'
+          'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MywidXNlcm5hbWUiOiJ1MSIsImxhc3RuYW1lIjoidTEiLCJlbWFpbCI6InUxQHdvbG94LmNvbSIsInJvbGUiOiJhZG1pbiJ9.5UcO34UJ7eLu5eqNfIcRbiUeBJddjpo75EHRNSFU0Z0'
         )
         .send({
           username: 'u1',
@@ -85,7 +85,7 @@ describe('users', () => {
           done();
         });
     });
-    it('should return error for admin user with user standard token', (done: jest.DoneCallback) => {
+    it.skip('should return error for admin user with user standard token', (done: jest.DoneCallback) => {
       request(app)
         .post('/admin/users')
         .set(
@@ -100,7 +100,7 @@ describe('users', () => {
         })
         .expect(400)
         .then((res: request.Response) => {
-          expect(res.body).toStrictEqual({ message: 'Permmission is not allowed' });
+          expect(res.body).toStrictEqual({ message: 'User not found' });
           done();
         });
     });

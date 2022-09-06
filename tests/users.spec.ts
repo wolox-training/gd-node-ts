@@ -11,7 +11,7 @@ describe('users', () => {
         lastname: 'u1',
         email: 'u1@wolox.com',
         password: bcrypt.hashSync('u1U1u1U1', 10),
-        role: 'standard'
+        role: 'admin'
       },
       {
         username: 'u2',
@@ -23,12 +23,12 @@ describe('users', () => {
     ])
   );
   describe('/users GET', () => {
-    it.skip('should return all users', (done: jest.DoneCallback) => {
+    it('should return all users', (done: jest.DoneCallback) => {
       request(app)
         .get('/users')
         .set(
           'Authorization',
-          'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJqb2huIiwibGFzdG5hbWUiOiJkb3ciLCJlbWFpbCI6ImpvaG4uZG93QHdvbG94LmNvbSIsInJvbGUiOiJzdGFuZGFyZCJ9.3VLXNit8C6VsMixaHa6Ho-euevoKKZZqwWrn_FkHfsw'
+          'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MywidXNlcm5hbWUiOiJ1MSIsImxhc3RuYW1lIjoidTEiLCJlbWFpbCI6InUxQHdvbG94LmNvbSIsInJvbGUiOiJhZG1pbiJ9.5UcO34UJ7eLu5eqNfIcRbiUeBJddjpo75EHRNSFU0Z0'
         )
         .expect(200)
         .then((res: request.Response) => {
