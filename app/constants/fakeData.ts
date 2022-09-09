@@ -44,9 +44,18 @@ export const u3fake = {
   password: '1234'
 };
 
+export const u3wolox = {
+  email: 'u3@wolox.com'
+};
+
 export const tokenStandard = {
   Authorization:
     'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJqb2huIiwibGFzdG5hbWUiOiJkb3ciLCJlbWFpbCI6ImpvaG4uZG93QHdvbG94LmNvbSIsInJvbGUiOiJzdGFuZGFyZCJ9.3VLXNit8C6VsMixaHa6Ho-euevoKKZZqwWrn_FkHfsw'
+};
+
+export const tokenAdmin = {
+  Authorization:
+    'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJqb2huIiwibGFzdG5hbWUiOiJkb3ciLCJlbWFpbCI6ImpvaG4uZG93QHdvbG94LmNvbSIsInJvbGUiOiJhZG1pbiJ9.MWeUu0OO-bkB0ByLjMXRYiJH5fQ-ykL8iEkN6HNOBRQ'
 };
 
 export default {
@@ -56,5 +65,7 @@ export default {
   u2fake,
   u3,
   u3fake,
-  tokenStandard
+  u3wolox,
+  tokenStandard,
+  tokenAdmin
 };

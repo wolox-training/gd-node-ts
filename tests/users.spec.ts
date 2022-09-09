@@ -1,5 +1,5 @@
 import request from 'supertest';
-import { u0, u1, u2, u2fake, u3, u3fake, tokenStandard } from '../app/constants/fakeData';
+import { u0, u1, u2, u2fake, u3, u3fake, u3wolox, tokenStandard } from '../app/constants/fakeData';
 import userRepository from '../app/services/users';
 import app from '../app';
 
@@ -9,10 +9,7 @@ describe('users', () => {
     it('should return all users', (done: jest.DoneCallback) => {
       request(app)
         .get('/users')
-        .set(
-          'Authorization',
-          'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJqb2huIiwibGFzdG5hbWUiOiJkb3ciLCJlbWFpbCI6ImpvaG4uZG93QHdvbG94LmNvbSIsInJvbGUiOiJzdGFuZGFyZCJ9.3VLXNit8C6VsMixaHa6Ho-euevoKKZZqwWrn_FkHfsw'
-        )
+        .set(tokenStandard)
         .expect(200)
         .then((res: request.Response) => {
           expect(res.body.length).toBe(2);
@@ -36,9 +33,7 @@ describe('users', () => {
         .send(u3)
         .expect(201)
         .then(async () => {
-          const user = await userRepository.findUser({
-            email: 'u3@wolox.com'
-          });
+          const user = await userRepository.findUser(u3wolox);
           expect(user).not.toBeNull();
           done();
         });
