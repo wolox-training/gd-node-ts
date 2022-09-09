@@ -34,9 +34,12 @@ export function findCard(options?: FindConditions<Card>): Promise<Card | undefin
   return cardRepository().findOne(options);
 }
 
-export const createCard = async (apiPath: string, apiMethod: string): Promise<Card> => {
+export const createCard = async (userId: number, apiPath: string, apiMethod: string): Promise<Card> => {
+  console.log(userId, apiPath, apiMethod, '222');
   const response = await axios.request(params(apiPath, apiMethod));
   const card = response.data;
+  card.users = [userId];
+  console.log(card);
   const buyCard = await createAndSave(card);
   return buyCard;
 };

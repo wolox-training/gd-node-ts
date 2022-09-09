@@ -117,6 +117,7 @@ export async function isStandardOrAdmin(
     const token = req.headers.authorization.split(' ')[1];
     const { key } = process.env;
     const user = decodeToken(token, key as string);
+    req.body.userId = user.id;
     const userToFind = await findUser({ email: user.email } as FindConditions<User>);
     if (userToFind) {
       if (user.role === 'standard' || user.role === 'admin') {

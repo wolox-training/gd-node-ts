@@ -85,12 +85,12 @@ describe('users', () => {
           done();
         });
     });
-    it.skip('should return error for admin user with user standard token', (done: jest.DoneCallback) => {
+    it('should return error for admin user with user standard token', (done: jest.DoneCallback) => {
       request(app)
         .post('/admin/users')
         .set(
           'Authorization',
-          'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6NywidXNlcm5hbWUiOiJqb2huIDUiLCJsYXN0bmFtZSI6ImRvdyIsImVtYWlsIjoiam9obi5kb3cuNUB3b2xveC5jb20iLCJyb2xlIjoic3RhbmRhcmQifQ.NgE2fzjqTYBolCSG1MnvsW_3EXQsmfPXowH45IaZmUQ'
+          'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6NCwidXNlcm5hbWUiOiJ1MiIsImxhc3RuYW1lIjoidTIiLCJlbWFpbCI6InUyQHdvbG94LmNvbSIsInJvbGUiOiJzdGFuZGFyZCJ9.CBiy7UAJ6KFU59LreNeQN8WV4ds_vpG1ZkebjVxnGqQ'
         )
         .send({
           username: 'u1',
@@ -100,7 +100,7 @@ describe('users', () => {
         })
         .expect(400)
         .then((res: request.Response) => {
-          expect(res.body).toStrictEqual({ message: 'User not found' });
+          expect(res.body).toStrictEqual({ message: 'Permmission is not allowed' });
           done();
         });
     });
