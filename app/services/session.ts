@@ -1,4 +1,5 @@
 import jwt from 'jwt-simple';
+import { User } from '../models/user';
 
 import config from '../../config';
 
@@ -18,8 +19,13 @@ export function getToken(payload: object, key: string, algorithm: string): strin
   return jwt.encode(payload, key, algorithm);
 }
 
+export function decodeToken(token: string, key: string): User {
+  return jwt.decode(token, key);
+}
+
 export default {
   encode,
   decode,
-  getToken
+  getToken,
+  decodeToken
 };
