@@ -1,5 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-
+import { Column, Entity, PrimaryGeneratedColumn, ManyToMany, JoinTable } from 'typeorm';
+import { User } from '../models/user';
 @Entity({ name: 'Card' })
 export class Card {
   @PrimaryGeneratedColumn()
@@ -66,4 +66,12 @@ export class Card {
     nullable: false
   })
   locale: string;
+
+  @ManyToMany(
+    () => User,
+    (user: User) => user.cards,
+    { cascade: true }
+  )
+  @JoinTable()
+  users: User[];
 }
