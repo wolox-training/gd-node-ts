@@ -69,8 +69,12 @@ export class Card {
 
   @ManyToMany(
     () => User,
-    (user: User) => user.cards,
-    { cascade: true }
+    // eslint-disable-next-line @typescript-eslint/typedef
+    user => user.cards,
+    {
+      cascade: true,
+      eager: true
+    }
   )
   @JoinTable()
   users: User[];

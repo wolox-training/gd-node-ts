@@ -39,7 +39,8 @@ export class User {
 
   @ManyToMany(
     () => Card,
-    (card: Card) => card.users
+    // eslint-disable-next-line @typescript-eslint/typedef
+    card => card.users
   )
   cards: Card[];
 }

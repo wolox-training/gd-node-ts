@@ -26,12 +26,10 @@ export async function createHScard(
   res: Response,
   next: NextFunction
 ): Promise<Response | void> {
-  console.log(req.body, '110');
   const { path } = req;
-  const { userId } = req.body;
+  const { user } = req.body;
   const method = 'GET';
-  console.log(userId, path, method, '111');
-  await createCard(userId, path, method)
+  await createCard(user, path, method)
     .then((card: Card) => {
       if (card) {
         logger.info(HTTP_CODES.CREATED);
@@ -42,7 +40,6 @@ export async function createHScard(
       }
     })
     .catch((err: Error) => {
-      console.log('112', err);
       logger.error({ error: err, message: HTTP_CODES.INTERNAL_SERVER_ERROR });
       next;
     });
