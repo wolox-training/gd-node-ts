@@ -1,5 +1,5 @@
 import request from 'supertest';
-import { u0, u1, u2, u2fake, u3, u3fake, tokenStandard } from '../app/constants/fakeData';
+import { u0, u1, u2, u2fake, u3, u3fake, u3wolox, tokenStandard } from '../app/constants/fakeData';
 import userRepository from '../app/services/users';
 import app from '../app';
 
@@ -33,7 +33,7 @@ describe('users', () => {
         .send(u3)
         .expect(201)
         .then(async () => {
-          const user = await userRepository.findUser(u3);
+          const user = await userRepository.findUser(u3wolox);
           expect(user).not.toBeNull();
           done();
         });

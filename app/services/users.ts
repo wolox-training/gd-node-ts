@@ -1,4 +1,11 @@
-import { getRepository, FindManyOptions, FindConditions, Repository, DeepPartial } from 'typeorm';
+import {
+  getRepository,
+  FindManyOptions,
+  FindConditions,
+  Repository,
+  DeepPartial,
+  UpdateResult
+} from 'typeorm';
 import bcrypt from 'bcryptjs';
 import { User } from '../models/user';
 
@@ -9,15 +16,20 @@ export function findUser(options?: FindConditions<User>): Promise<User | undefin
 }
 
 export function createAndSave(user: User): Promise<User> {
-  const aux = user;
-  if (aux.password) {
-    aux.password = bcrypt.hashSync(aux.password, 10);
-  }
+  user.password = bcrypt.hashSync(user.password, 10);
   return userRepository().save(user);
 }
 
 export function findAll(options?: FindManyOptions): Promise<User[]> {
   return userRepository().find(options);
+}
+
+export function updateOne(id: number, user: User): Promise<UpdateResult> {
+  const aux = user;
+  if (aux.password) {
+    aux.password = bcrypt.hashSync(aux.password, 10);
+  }
+  return userRepository().update(id, user);
 }
 
 export function createMany(users: DeepPartial<User>[]): Promise<User[]> {
@@ -28,5 +40,6 @@ export default {
   findAll,
   createMany,
   findUser,
-  createAndSave
+  createAndSave,
+  updateOne
 };
