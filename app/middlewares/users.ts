@@ -138,6 +138,7 @@ export default {
   checkUser,
   validateSignUp,
   validateSignIn,
+  validateSignUpAdmin,
   isStandard,
   isAdmin
 };
