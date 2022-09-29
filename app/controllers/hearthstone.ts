@@ -15,3 +15,8 @@ export function getHScards(req: Request, res: Response, next: NextFunction): Pro
     .then((cards: Allcards) => res.send(cards))
     .catch(next);
 }
+
+export default {
+  getHSinfo,
+  getHScards
+};

@@ -6,3 +6,7 @@ export function getTodos(_: Request, res: Response, next: NextFunction): Promise
     .then((todos: Todo[]) => res.send(todos))
     .catch(next);
 }
+
+export default {
+  getTodos
+};
