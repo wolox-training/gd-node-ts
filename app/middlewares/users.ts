@@ -155,6 +155,7 @@ export default {
   checkUser,
   validateSignUp,
   validateSignIn,
+  validateSignUpAdmin,
   isStandardOrAdmin,
   isAdmin
 };

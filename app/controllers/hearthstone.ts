@@ -71,3 +71,9 @@ export async function createHScard(
     }
   });
 }
+
+export default {
+  getHSinfo,
+  getHScards,
+  createHScard
+};
