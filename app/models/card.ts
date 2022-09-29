@@ -7,63 +7,117 @@ export class Card {
 
   @Column({
     type: 'varchar',
-    nullable: false
+    nullable: true
   })
   name: string;
 
   @Column({
     type: 'varchar',
     unique: true,
-    nullable: false
+    nullable: true
   })
   cardId: string;
 
   @Column({
     type: 'varchar',
     unique: true,
-    nullable: false
+    nullable: true
   })
   dbfId: string;
 
   @Column({
     type: 'varchar',
-    nullable: false
+    nullable: true
   })
   cardSet: string;
 
   @Column({
     type: 'varchar',
-    nullable: false
+    nullable: true
   })
   type: string;
 
   @Column({
     type: 'varchar',
-    nullable: false
+    nullable: true
   })
   faction: string;
 
   @Column({
     type: 'integer',
-    nullable: false
+    nullable: true
   })
   cost: number;
 
   @Column({
     type: 'varchar',
-    nullable: false
+    nullable: true
+  })
+  attack: string;
+
+  @Column({
+    type: 'varchar',
+    nullable: true
+  })
+  health: string;
+
+  @Column({
+    type: 'varchar',
+    nullable: true
+  })
+  durability: string;
+
+  @Column({
+    type: 'varchar',
+    nullable: true
+  })
+  rarity: string;
+
+  @Column({
+    type: 'varchar',
+    nullable: true
   })
   text: string;
 
   @Column({
     type: 'varchar',
-    nullable: false
+    nullable: true
+  })
+  flavor: string;
+
+  @Column({
+    type: 'varchar',
+    nullable: true
+  })
+  artist: string;
+
+  @Column({
+    type: 'varchar',
+    nullable: true
+  })
+  race: string;
+
+  @Column({
+    type: 'varchar',
+    nullable: true
+  })
+  collectible: string;
+
+  @Column({
+    type: 'varchar',
+    nullable: true
   })
   playerClass: string;
 
   @Column({
     type: 'varchar',
-    nullable: false
+    nullable: true
+  })
+  img: string;
+
+  @Column({
+    type: 'varchar',
+    nullable: true
   })
   locale: string;
 
@@ -72,8 +126,7 @@ export class Card {
     // eslint-disable-next-line @typescript-eslint/typedef
     user => user.cards,
     {
-      cascade: true,
-      eager: true
+      cascade: true
     }
   )
   @JoinTable()

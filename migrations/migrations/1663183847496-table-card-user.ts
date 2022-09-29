@@ -5,7 +5,7 @@ export class TableCardUser1663183847496 implements MigrationInterface {
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
-      'CREATE TABLE "card_users__user" ("cardId" integer NOT NULL, "userId" integer NOT NULL, CONSTRAINT "PK_b299f720bc6bcb15b3c7c549a41" PRIMARY KEY ("cardId", "userId"))',
+      'CREATE TABLE "card_users__user" ("cardId" integer NOT NULL, "userId" integer NOT NULL)',
       undefined
     );
     await queryRunner.query(

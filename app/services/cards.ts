@@ -1,4 +1,4 @@
-import { Repository, getRepository, FindConditions, FindOneOptions } from 'typeorm';
+import { Repository, getRepository, FindConditions } from 'typeorm';
 import axios, { AxiosRequestConfig } from 'axios';
 import { Card } from '../models/card';
 import { User } from '../models/user';
@@ -35,21 +35,20 @@ export function findCard(options?: FindConditions<Card>): Promise<Card | undefin
   return cardRepository().findOne(options);
 }
 
-export function findCardByUser(id?: string, options?: FindOneOptions<Card>): Promise<Card | undefined> {
-  return cardRepository().findOne(id, options);
-}
-
-export const createCard = async (user: User, apiPath: string, apiMethod: string): Promise<Card> => {
-  const response = await axios.request(params(apiPath, apiMethod));
-  const card = response.data;
-  console.log(card, '000');
-  console.log(user.id, '001');
-  card[0].users = [user];
-  const findCardByOwner = await findCardByUser(card.cardId);
-  console.log(findCardByOwner, '111');
-  // const buyCard = await createAndSave(card);
-  // console.log(buyCard, '222');
-  return card;
+export const createCard = async (
+  user: User,
+  apiPath: string,
+  apiMethod: string
+): Promise<Card | undefined> => {
+  try {
+    const response = await axios.request(params(apiPath, apiMethod));
+    const card = response.data;
+    card[0].users = [user];
+    await createAndSave(card);
+    return card;
+  } catch (err) {
+    return undefined;
+  }
 };
 
 export default {
