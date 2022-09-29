@@ -1,35 +1,15 @@
 import request from 'supertest';
-import bcrypt from 'bcryptjs';
+import { u0, u1, u2, u2fake, u3, u3fake, u3wolox, tokenStandard } from '../app/constants/fakeData';
 import userRepository from '../app/services/users';
 import app from '../app';
 
 describe('users', () => {
-  beforeEach(() =>
-    userRepository.createMany([
-      {
-        username: 'u1',
-        lastname: 'u1',
-        email: 'u1@wolox.com',
-        password: bcrypt.hashSync('u1U1u1U1', 10),
-        role: 'admin'
-      },
-      {
-        username: 'u2',
-        lastname: 'u2',
-        email: 'u2@wolox.com',
-        password: bcrypt.hashSync('u2U2u2U2', 10),
-        role: 'standard'
-      }
-    ])
-  );
+  beforeEach(() => userRepository.createMany([u1, u2]));
   describe('/users GET', () => {
     it('should return all users', (done: jest.DoneCallback) => {
       request(app)
         .get('/users')
-        .set(
-          'Authorization',
-          'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MywidXNlcm5hbWUiOiJ1MSIsImxhc3RuYW1lIjoidTEiLCJlbWFpbCI6InUxQHdvbG94LmNvbSIsInJvbGUiOiJhZG1pbiJ9.5UcO34UJ7eLu5eqNfIcRbiUeBJddjpo75EHRNSFU0Z0'
-        )
+        .set(tokenStandard)
         .expect(200)
         .then((res: request.Response) => {
           expect(res.body.length).toBe(2);
@@ -50,17 +30,10 @@ describe('users', () => {
     it('should create an user', (done: jest.DoneCallback) => {
       request(app)
         .post('/users')
-        .send({
-          username: 'u3',
-          lastname: 'u3',
-          email: 'u3@wolox.com',
-          password: bcrypt.hashSync('u3U3u3U3', 10)
-        })
+        .send(u3)
         .expect(201)
         .then(async () => {
-          const user = await userRepository.findUser({
-            email: 'u3@wolox.com'
-          });
+          const user = await userRepository.findUser(u3wolox);
           expect(user).not.toBeNull();
           done();
         });
@@ -68,12 +41,7 @@ describe('users', () => {
     it('should return error for user email already in use', (done: jest.DoneCallback) => {
       request(app)
         .post('/users')
-        .send({
-          username: 'u2',
-          lastname: 'u2',
-          email: 'u2@wolox.com',
-          password: 'u2U2u2U2'
-        })
+        .send(u2fake)
         .expect(400)
         .then((res: request.Response) => {
           expect(res.body).toStrictEqual({
@@ -85,12 +53,7 @@ describe('users', () => {
     it('should return error for user because password is invalid', (done: jest.DoneCallback) => {
       request(app)
         .post('/users')
-        .send({
-          username: 'u3',
-          lastname: 'u3',
-          email: 'u3@wolox.com',
-          password: '1234'
-        })
+        .send(u3fake)
         .expect(400)
         .then((res: request.Response) => {
           expect(res.body).toStrictEqual({
@@ -102,12 +65,7 @@ describe('users', () => {
     it('should return error for user because all fields are empty', (done: jest.DoneCallback) => {
       request(app)
         .post('/users')
-        .send({
-          username: '',
-          lastname: '',
-          email: '',
-          password: ''
-        })
+        .send(u0)
         .expect(400)
         .then((res: request.Response) => {
           expect(res.body).toStrictEqual({

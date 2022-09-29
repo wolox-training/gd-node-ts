@@ -117,3 +117,11 @@ export function getUserByEmail(req: Request, res: Response, next: NextFunction):
     })
     .catch(next);
 }
+
+export default {
+  getUsers,
+  createUser,
+  adminUser,
+  getUserById,
+  getUserByEmail
+};

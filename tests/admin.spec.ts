@@ -1,41 +1,16 @@
 import request from 'supertest';
-import bcrypt from 'bcryptjs';
+import { u1, u2, u3, tokenStandard, tokenAdmin } from '../app/constants/fakeData';
 import userRepository from '../app/services/users';
 import app from '../app';
 
 describe('users', () => {
-  beforeEach(() =>
-    userRepository.createMany([
-      {
-        username: 'u1',
-        lastname: 'u1',
-        email: 'u1@wolox.com',
-        password: bcrypt.hashSync('u1U1u1U1', 10),
-        role: 'admin'
-      },
-      {
-        username: 'u2',
-        lastname: 'u2',
-        email: 'u2@wolox.com',
-        password: bcrypt.hashSync('u2U2u2U2', 10),
-        role: 'standard'
-      }
-    ])
-  );
+  beforeEach(() => userRepository.createMany([u1, u2]));
   describe('/admin/users POST', () => {
     it('should create an admin user', (done: jest.DoneCallback) => {
       request(app)
         .post('/admin/users')
-        .set(
-          'Authorization',
-          'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MywidXNlcm5hbWUiOiJ1MSIsImxhc3RuYW1lIjoidTEiLCJlbWFpbCI6InUxQHdvbG94LmNvbSIsInJvbGUiOiJhZG1pbiJ9.5UcO34UJ7eLu5eqNfIcRbiUeBJddjpo75EHRNSFU0Z0'
-        )
-        .send({
-          username: 'u3',
-          lastname: 'u3',
-          email: 'u3@wolox.com',
-          password: bcrypt.hashSync('u3U3u3U3', 10)
-        })
+        .set(tokenAdmin)
+        .send(u3)
         .expect(201)
         .then(async (res: request.Response) => {
           const user = await userRepository.findUser({
@@ -49,16 +24,8 @@ describe('users', () => {
     it('should update an admin user', (done: jest.DoneCallback) => {
       request(app)
         .post('/admin/users')
-        .set(
-          'Authorization',
-          'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MywidXNlcm5hbWUiOiJ1MSIsImxhc3RuYW1lIjoidTEiLCJlbWFpbCI6InUxQHdvbG94LmNvbSIsInJvbGUiOiJhZG1pbiJ9.5UcO34UJ7eLu5eqNfIcRbiUeBJddjpo75EHRNSFU0Z0'
-        )
-        .send({
-          username: 'u1',
-          lastname: 'u1',
-          email: 'u1@wolox.com',
-          password: bcrypt.hashSync('u1U1u1U1', 10)
-        })
+        .set(tokenAdmin)
+        .send(u1)
         .expect(201)
         .then(async (res: request.Response) => {
           const user = await userRepository.findUser({
@@ -73,12 +40,7 @@ describe('users', () => {
     it('should return error for admin user without token', (done: jest.DoneCallback) => {
       request(app)
         .post('/admin/users')
-        .send({
-          username: 'u1',
-          lastname: 'u1',
-          email: 'u1@wolox.com',
-          password: bcrypt.hashSync('u1U1u1U1', 10)
-        })
+        .send(u1)
         .expect(400)
         .then((res: request.Response) => {
           expect(res.body).toStrictEqual({ message: 'token is required' });
@@ -88,16 +50,8 @@ describe('users', () => {
     it('should return error for admin user with user standard token', (done: jest.DoneCallback) => {
       request(app)
         .post('/admin/users')
-        .set(
-          'Authorization',
-          'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6NCwidXNlcm5hbWUiOiJ1MiIsImxhc3RuYW1lIjoidTIiLCJlbWFpbCI6InUyQHdvbG94LmNvbSIsInJvbGUiOiJzdGFuZGFyZCJ9.CBiy7UAJ6KFU59LreNeQN8WV4ds_vpG1ZkebjVxnGqQ'
-        )
-        .send({
-          username: 'u1',
-          lastname: 'u1',
-          email: 'u1@wolox.com',
-          password: bcrypt.hashSync('u1U1u1U1', 10)
-        })
+        .set(tokenStandard)
+        .send(u1)
         .expect(400)
         .then((res: request.Response) => {
           expect(res.body).toStrictEqual({ message: 'Permmission is not allowed' });
