@@ -31,45 +31,76 @@ export async function createHScard(
   const { path, params } = req;
   const { user } = req.body;
   const method = 'GET';
-  await findUser(user).then(async (userFounded: User) => {
-    if (userFounded.cards.length) {
-      const cardByUser = userFounded.cards.find((card: Card) => card.cardId === params.id);
+  try {
+    const userToFind = await findUser(user);
+    if (userToFind.cards.length) {
+      const cardByUser = userToFind.cards.find((card: Card) => card.cardId === params.id);
       if (cardByUser) {
         logger.error(HTTP_CODES.CONFLICT);
         res.status(HttpStatus.CONFLICT).send({ message: 'DUPLICATE CARD' });
       } else {
-        await createCard(userFounded, path, method)
-          .then((card: Card) => {
-            if (card) {
-              logger.info(HTTP_CODES.CREATED);
-              res.status(HttpStatus.CREATED).send(successful.CREATED);
-            } else {
-              logger.error(HTTP_CODES.BAD_REQUEST);
-              res.status(HttpStatus.BAD_REQUEST).send(HTTP_CODES.BAD_REQUEST);
-            }
-          })
-          .catch((err: Error) => {
-            logger.error({ error: err, message: HTTP_CODES.INTERNAL_SERVER_ERROR });
-            next;
-          });
+        const card = await createCard(userToFind, path, method);
+        if (card) {
+          logger.info(HTTP_CODES.CREATED);
+          res.status(HttpStatus.CREATED).send(successful.CREATED);
+        } else {
+          logger.error(HTTP_CODES.BAD_REQUEST);
+          res.status(HttpStatus.BAD_REQUEST).send(HTTP_CODES.BAD_REQUEST);
+        }
       }
     } else {
-      await createCard(userFounded, path, method)
-        .then((card: Card) => {
-          if (card) {
-            logger.info(HTTP_CODES.CREATED);
-            res.status(HttpStatus.CREATED).send(successful.CREATED);
-          } else {
-            logger.error(HTTP_CODES.BAD_REQUEST);
-            res.status(HttpStatus.BAD_REQUEST).send(HTTP_CODES.BAD_REQUEST);
-          }
-        })
-        .catch((err: Error) => {
-          logger.error({ error: err, message: HTTP_CODES.INTERNAL_SERVER_ERROR });
-          next;
-        });
+      const card = await createCard(userToFind, path, method);
+        if (card) {
+          logger.info(HTTP_CODES.CREATED);
+          res.status(HttpStatus.CREATED).send(successful.CREATED);
+        } else {
+          logger.error(HTTP_CODES.BAD_REQUEST);
+          res.status(HttpStatus.BAD_REQUEST).send(HTTP_CODES.BAD_REQUEST);
+        }
     }
-  });
+  } catch (err) {
+    logger.error({ error: err, message: HTTP_CODES.INTERNAL_SERVER_ERROR });
+    next;
+  }
+  // await findUser(user).then(async (userFounded: User) => {
+  //   if (userFounded.cards.length) {
+  //     const cardByUser = userFounded.cards.find((card: Card) => card.cardId === params.id);
+  //     if (cardByUser) {
+  //       logger.error(HTTP_CODES.CONFLICT);
+  //       res.status(HttpStatus.CONFLICT).send({ message: 'DUPLICATE CARD' });
+  //     } else {
+  //       await createCard(userFounded, path, method)
+  //         .then((card: Card) => {
+  //           if (card) {
+  //             logger.info(HTTP_CODES.CREATED);
+  //             res.status(HttpStatus.CREATED).send(successful.CREATED);
+  //           } else {
+  //             logger.error(HTTP_CODES.BAD_REQUEST);
+  //             res.status(HttpStatus.BAD_REQUEST).send(HTTP_CODES.BAD_REQUEST);
+  //           }
+  //         })
+  //         .catch((err: Error) => {
+  //           logger.error({ error: err, message: HTTP_CODES.INTERNAL_SERVER_ERROR });
+  //           next;
+  //         });
+  //     }
+  //   } else {
+  //     await createCard(userFounded, path, method)
+  //       .then((card: Card) => {
+  //         if (card) {
+  //           logger.info(HTTP_CODES.CREATED);
+  //           res.status(HttpStatus.CREATED).send(successful.CREATED);
+  //         } else {
+  //           logger.error(HTTP_CODES.BAD_REQUEST);
+  //           res.status(HttpStatus.BAD_REQUEST).send(HTTP_CODES.BAD_REQUEST);
+  //         }
+  //       })
+  //       .catch((err: Error) => {
+  //         logger.error({ error: err, message: HTTP_CODES.INTERNAL_SERVER_ERROR });
+  //         next;
+  //       });
+  //   }
+  // });
 }
 
 export default {
