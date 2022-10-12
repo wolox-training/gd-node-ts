@@ -33,4 +33,5 @@ export const init = (app: Application): void => {
   app.get('/info', hearthstoneControllers.getHSinfo);
   app.get('/cards', hearthstoneControllers.getHScards);
   app.post('/cards/:id', usersMiddlewares.isStandardOrAdmin, hearthstoneControllers.createHScard);
+  app.post('/decks', hearthstoneControllers.createHSset);
 };

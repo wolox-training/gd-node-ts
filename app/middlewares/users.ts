@@ -120,7 +120,7 @@ export async function isStandardOrAdmin(
     req.body.user = user;
     const userToFind = await findUser({ email: user.email } as FindConditions<User>);
     if (userToFind) {
-      if (user.role === 'standard' || user.role === 'admin') {
+      if (user.role) {
         return next();
       }
       return res.status(400).json({ message: 'Permmission is not allowed' });

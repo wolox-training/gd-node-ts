@@ -51,8 +51,14 @@ export const createCard = async (
   }
 };
 
+export const getSet = async (apiPath: string, apiMethod: string): Promise<Allcards> => {
+  const response = await axios.request(params(apiPath, apiMethod));
+  return response.data;
+};
+
 export default {
   getInfo,
   getAllCard,
-  createCard
+  createCard,
+  getSet,
 };
