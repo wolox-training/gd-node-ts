@@ -74,5 +74,5 @@ export default {
   getHSinfo,
   getHScards,
   createHScard,
-  createHSset,
+  createHSset
 };

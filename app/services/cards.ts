@@ -60,5 +60,5 @@ export default {
   getInfo,
   getAllCard,
   createCard,
-  getSet,
+  getSet
 };
