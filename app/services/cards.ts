@@ -2,7 +2,7 @@ import { Repository, getRepository, FindConditions } from 'typeorm';
 import axios, { AxiosRequestConfig } from 'axios';
 import { Card } from '../models/card';
 import { User } from '../models/user';
-import { Info, Allcards } from '../constants';
+import { Allcards, Info } from '../constants';
 
 const params = (apiPath: string, apiMethod: string): object =>
   ({
@@ -51,14 +51,8 @@ export const createCard = async (
   }
 };
 
-export const getSet = async (apiPath: string, apiMethod: string): Promise<Allcards> => {
-  const response = await axios.request(params(apiPath, apiMethod));
-  return response.data;
-};
-
 export default {
   getInfo,
   getAllCard,
-  createCard,
-  getSet
+  createCard
 };

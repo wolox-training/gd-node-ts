@@ -1,7 +1,7 @@
 import { Response, Request, NextFunction } from 'express';
 import HttpStatus from 'http-status-codes';
-import { Info, Allcards, HTTP_CODES } from '../constants';
-import { getInfo, getAllCard, createCard, getSet } from '../services/cards';
+import { Allcards, HTTP_CODES, Info } from '../constants';
+import { getInfo, getAllCard, createCard } from '../services/cards';
 import { findUser } from '../services/users';
 import { Card } from '../models/card';
 import logger from '../logger';
@@ -63,16 +63,8 @@ export async function createHScard(
   }
 }
 
-export function createHSset(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
-  const { path, method } = req;
-  return getSet(path, method)
-    .then((cards: Allcards) => res.send(cards))
-    .catch(next);
-}
-
 export default {
   getHSinfo,
   getHScards,
-  createHScard,
-  createHSset
+  createHScard
 };

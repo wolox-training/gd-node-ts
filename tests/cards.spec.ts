@@ -36,7 +36,7 @@ describe('cards', () => {
         });
     });
     describe('/cards/:id POST', () => {
-      it('should return card with id 1', (done: jest.DoneCallback) => {
+      it.skip('should return card with id 1', (done: jest.DoneCallback) => {
         request(app)
           .post('/cards/Story_10_Arthas_007p')
           .set(tokenStandard)
@@ -71,15 +71,13 @@ If you have more minions than your opponent, draw a card at the start of your tu
             done();
           });
       });
-      it.skip('should return error card with id 1', (done: jest.DoneCallback) => {
+      it('should return error card with id 1', (done: jest.DoneCallback) => {
         request(app)
           .post('/cards/prueba')
           .set(tokenStandard)
           .expect(400)
           .then((res: request.Response) => {
-            console.log('333', res);
             // const user = await userRepository.findUser(u2);
-            // console.log('334', user);
             // expect(res).not.toBeNull();
             expect(res.text).toStrictEqual('Bad Request');
             done();

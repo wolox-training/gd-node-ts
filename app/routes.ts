@@ -1,9 +1,10 @@
 import { Application } from 'express';
 
 import { healthCheck } from './controllers/healthCheck';
-import usersControllers from './controllers/users';
 import { getTodos } from './controllers/todos';
-import hearthstoneControllers from './controllers/hearthstone';
+import usersControllers from './controllers/users';
+import cardsControllers from './controllers/cards';
+import setsControllers from './controllers/sets';
 import usersMiddlewares from './middlewares/users';
 
 export const init = (app: Application): void => {
@@ -30,8 +31,8 @@ export const init = (app: Application): void => {
     usersControllers.getUserByEmail
   );
   app.get('/todos', getTodos);
-  app.get('/info', hearthstoneControllers.getHSinfo);
-  app.get('/cards', hearthstoneControllers.getHScards);
-  app.post('/cards/:id', usersMiddlewares.isStandardOrAdmin, hearthstoneControllers.createHScard);
-  app.post('/decks', hearthstoneControllers.createHSset);
+  app.get('/info', cardsControllers.getHSinfo);
+  app.get('/cards', cardsControllers.getHScards);
+  app.post('/cards/:id', usersMiddlewares.isStandardOrAdmin, cardsControllers.createHScard);
+  app.post('/decks', usersMiddlewares.isStandardOrAdmin, setsControllers.createHSSet);
 };
