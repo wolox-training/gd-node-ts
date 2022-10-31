@@ -5,7 +5,7 @@ export class SetModels1665592450226 implements MigrationInterface {
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
-      'CREATE TABLE "Set" ("id" SERIAL NOT NULL, "name" character varying, "userId" integer, CONSTRAINT "PK_f0aa4512284ee16bfc68f86a55c" PRIMARY KEY ("id"))',
+      'CREATE TABLE "Set" ("id" SERIAL NOT NULL, "name" character varying, "userId" integer)',
       undefined
     );
     await queryRunner.query(

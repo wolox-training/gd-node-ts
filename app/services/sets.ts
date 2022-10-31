@@ -1,7 +1,7 @@
 import { Repository, getRepository, FindManyOptions } from 'typeorm';
 import axios, { AxiosRequestConfig } from 'axios';
 import { Set } from '../models/set';
-import { User } from '../models/user';
+// import { User } from '../models/user';
 import { Info } from '../constants';
 
 const params = (apiPath: string, apiMethod: string): object =>
@@ -30,14 +30,12 @@ export function findSet(options?: FindManyOptions<Set>): Promise<Set[]> {
   return setRepository().find(options);
 }
 
-export const createSet = async (set: Set, user: User): Promise<Set | undefined> => {
+export const createSet = async (set: Set): Promise<Set | undefined> => {
   try {
-    set.user = user;
-    console.log(set);
+    console.log('444', set);
     await createAndSave(set);
     return set;
   } catch (err) {
-    console.log(err);
     return undefined;
   }
 };

@@ -9,38 +9,35 @@ import { successful } from '../constants/messages';
 export async function createHSSet(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
   const path = 'info';
   const method = 'GET';
-  const { user, set } = req.body;
-  console.log(req.body);
+  const { user, setName } = req.body;
   try {
     const classesToFind = await getSetInfo(path, method);
     const classesOfSet = classesToFind.classes;
-    const setToFind = classesOfSet.find((el: string) => el === set);
+    const setToFind = classesOfSet.find((el: string) => el === setName);
+    const classesExists = await findSet({
+      relations: ['user'],
+      where: {
+        name: setName,
+        user: {
+          id: user.id
+        }
+      }
+    });
+    console.log('111', setToFind);
+    console.log('222', classesExists);
     if (setToFind) {
-      console.log('1', set);
-      const classesExists = await findSet({
-        where: {
-          name: set
-        }
-      });
-      console.log('2', classesExists);
-      if (classesExists === set) {
-        console.log('3');
+      if (classesExists.length >= 1) {
         logger.error(HTTP_CODES.CONFLICT);
-        res.status(HttpStatus.CONFLICT).send({ message: 'DUPLICATE SET' });
+        res.status(HttpStatus.CONFLICT).send({ message: 'Duplicate Set not allow' });
       } else {
-        console.log('4');
-        // set.user = user;
-        const classesToCreate = await createSet(set, user);
-        console.log(classesToCreate);
-        if (classesToCreate) {
-          console.log('5');
-          logger.info(HTTP_CODES.CREATED);
-          res.status(HttpStatus.CREATED).send(successful.CREATED);
-        } else {
-          console.log('6');
-          logger.error(HTTP_CODES.BAD_REQUEST);
-          res.status(HttpStatus.BAD_REQUEST).send(HTTP_CODES.BAD_REQUEST);
-        }
+        console.log('333');
+        const set = {
+          name: setName,
+          ...user
+        };
+        await createSet(set);
+        logger.info(HTTP_CODES.CREATED);
+        res.status(HttpStatus.CREATED).send(successful.CREATED);
       }
     } else {
       res.send('Not Found');
