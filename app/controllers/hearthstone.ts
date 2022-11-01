@@ -32,8 +32,8 @@ export async function createHScard(
   const method = 'GET';
   try {
     const userToFind = await findUser(user);
-    if (userToFind && userToFind.cards.length) {
-      const cardByUser = userToFind.cards.find((card: Card) => card.cardId === params.id);
+    const cardByUser = userToFind?.cards.find((card: Card) => card.cardId === params.id);
+    if (userToFind) {
       if (cardByUser) {
         logger.error(HTTP_CODES.CONFLICT);
         res.status(HttpStatus.CONFLICT).send({ message: 'DUPLICATE CARD' });
@@ -47,15 +47,9 @@ export async function createHScard(
           res.status(HttpStatus.BAD_REQUEST).send(HTTP_CODES.BAD_REQUEST);
         }
       }
-    } else if (userToFind) {
-      const card = await createCard(userToFind, path, method);
-      if (card) {
-        logger.info(HTTP_CODES.CREATED);
-        res.status(HttpStatus.CREATED).send(successful.CREATED);
-      } else {
-        logger.error(HTTP_CODES.BAD_REQUEST);
-        res.status(HttpStatus.BAD_REQUEST).send(HTTP_CODES.BAD_REQUEST);
-      }
+    } else {
+      logger.error(HTTP_CODES.NOT_FOUND);
+      res.status(HttpStatus.NOT_FOUND).send(HTTP_CODES.NOT_FOUND);
     }
   } catch (err) {
     logger.error({ error: err, message: HTTP_CODES.INTERNAL_SERVER_ERROR });

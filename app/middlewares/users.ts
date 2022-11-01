@@ -117,13 +117,10 @@ export async function isStandardOrAdmin(
     const token = req.headers.authorization.split(' ')[1];
     const { key } = process.env;
     const user = decodeToken(token, key as string);
-    req.body.user = user;
     const userToFind = await findUser({ email: user.email } as FindConditions<User>);
     if (userToFind) {
-      if (user.role) {
-        return next();
-      }
-      return res.status(400).json({ message: 'Permmission is not allowed' });
+      req.body.user = user;
+      return next();
     }
     return res.status(404).json({ message: 'User not found' });
   }
@@ -141,7 +138,7 @@ export async function isAdmin(
     const user = decodeToken(token, key as string);
     const userToFind = await findUser({ email: user.email } as FindConditions<User>);
     if (userToFind) {
-      if (user.role === 'admin') {
+      if (userToFind.role === 'admin') {
         return next();
       }
       return res.status(400).json({ message: 'Permmission is not allowed' });

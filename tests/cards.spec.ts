@@ -8,10 +8,6 @@ describe('cards', () => {
     userRepository.createMany([u1, u2]);
     jest.setTimeout(60000);
   });
-  // afterEach(() => {
-  //   jest.clearAllMocks();
-  //   jest.resetAllMocks();
-  // });
   describe('/info GET', () => {
     it('should get info cards', (done: jest.DoneCallback) => {
       request(app)
@@ -77,7 +73,7 @@ If you have more minions than your opponent, draw a card at the start of your tu
           .set(tokenStandard)
           .expect(400)
           .then((res: request.Response) => {
-            console.log('333', res);
+            // console.log('333', res);
             // const user = await userRepository.findUser(u2);
             // console.log('334', user);
             // expect(res).not.toBeNull();
