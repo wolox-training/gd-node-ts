@@ -2,7 +2,7 @@ import { Repository, getRepository, FindManyOptions } from 'typeorm';
 import axios, { AxiosRequestConfig } from 'axios';
 import { Set } from '../models/set';
 // import { User } from '../models/user';
-import { Info } from '../constants';
+import { Info, InfoSet } from '../constants';
 
 const params = (apiPath: string, apiMethod: string): object =>
   ({
@@ -22,7 +22,7 @@ export const getSetInfo = async (apiPath: string, apiMethod: string): Promise<In
   return response.data;
 };
 
-export function createAndSave(set: Set): Promise<Set> {
+export function createAndSave(set: InfoSet): Promise<InfoSet> {
   return setRepository().save(set);
 }
 
@@ -30,9 +30,8 @@ export function findSet(options?: FindManyOptions<Set>): Promise<Set[]> {
   return setRepository().find(options);
 }
 
-export const createSet = async (set: Set): Promise<Set | undefined> => {
+export const createSet = async (set: InfoSet): Promise<InfoSet | undefined> => {
   try {
-    console.log('444', set);
     await createAndSave(set);
     return set;
   } catch (err) {
