@@ -55,8 +55,8 @@ export async function addCardToSet(
   const path = 'info';
   const method = 'GET';
   try {
-    const result = await getSetInfo(path, method);
-    res.send(result);
+    await getSetInfo(path, method);
+    res.send(req.body);
   } catch (err) {
     logger.error({ error: err, message: HTTP_CODES.INTERNAL_SERVER_ERROR });
     next;

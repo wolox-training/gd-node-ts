@@ -1,5 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn, ManyToMany, JoinTable } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, ManyToMany, JoinTable, ManyToOne } from 'typeorm';
 import { User } from '../models/user';
+import { Set } from '../models/set';
+
 @Entity({ name: 'Card' })
 export class Card {
   @PrimaryGeneratedColumn()
@@ -131,4 +133,11 @@ export class Card {
   )
   @JoinTable()
   users: User[];
+
+  @ManyToOne(
+    () => Set,
+    // eslint-disable-next-line @typescript-eslint/typedef
+    set => set.cards
+  )
+  set: Set;
 }
