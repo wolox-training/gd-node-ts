@@ -47,6 +47,23 @@ export async function createHSSet(req: Request, res: Response, next: NextFunctio
   }
 }
 
+export async function addCardToSet(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<Response | void> {
+  const path = 'info';
+  const method = 'GET';
+  try {
+    const result = await getSetInfo(path, method);
+    res.send(result);
+  } catch (err) {
+    logger.error({ error: err, message: HTTP_CODES.INTERNAL_SERVER_ERROR });
+    next;
+  }
+}
+
 export default {
-  createHSSet
+  createHSSet,
+  addCardToSet
 };

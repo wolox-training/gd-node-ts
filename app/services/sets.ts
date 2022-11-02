@@ -39,6 +39,11 @@ export const createSet = async (set: InfoSet): Promise<InfoSet | undefined> => {
   }
 };
 
+export const addCard = async (apiPath: string, apiMethod: string): Promise<Info> => {
+  const response = await axios.request(params(apiPath, apiMethod));
+  return response.data;
+};
+
 export default {
   createAndSave,
   findSet,
