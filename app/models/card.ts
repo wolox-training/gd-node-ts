@@ -137,7 +137,10 @@ export class Card {
   @ManyToOne(
     () => Set,
     // eslint-disable-next-line @typescript-eslint/typedef
-    set => set.cards
+    set => set.cards,
+    {
+      cascade: true
+    }
   )
   set: Set;
 }
