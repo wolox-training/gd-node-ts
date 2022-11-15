@@ -1,6 +1,16 @@
-import { Column, Entity, PrimaryGeneratedColumn, ManyToMany, JoinTable, ManyToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  ManyToMany,
+  JoinTable,
+  JoinColumn,
+  ManyToOne,
+  OneToOne
+} from 'typeorm';
 import { User } from '../models/user';
 import { Set } from '../models/set';
+import { Box } from '../models/box';
 
 @Entity({ name: 'Card' })
 export class Card {
@@ -143,4 +153,10 @@ export class Card {
     }
   )
   set: Set;
+
+  @OneToOne(() => Box, {
+    cascade: true
+  })
+  @JoinColumn()
+  box: Box;
 }

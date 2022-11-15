@@ -2,7 +2,7 @@ import { Repository, getRepository, FindConditions, FindManyOptions } from 'type
 import axios, { AxiosRequestConfig } from 'axios';
 import { Card } from '../models/card';
 import { User } from '../models/user';
-import { Allcards, Info } from '../constants';
+import { Allcards, Info, Common } from '../constants';
 
 const params = (apiPath: string, apiMethod: string): object =>
   ({
@@ -16,6 +16,11 @@ const params = (apiPath: string, apiMethod: string): object =>
   } as AxiosRequestConfig);
 
 export const getInfo = async (apiPath: string, apiMethod: string): Promise<Info> => {
+  const response = await axios.request(params(apiPath, apiMethod));
+  return response.data;
+};
+
+export const getCardByQuality = async (apiPath: string, apiMethod: string): Promise<Common[]> => {
   const response = await axios.request(params(apiPath, apiMethod));
   return response.data;
 };
@@ -57,6 +62,7 @@ export const createCard = async (
 
 export default {
   getInfo,
+  getCardByQuality,
   getAllCard,
   createCard
 };

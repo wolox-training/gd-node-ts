@@ -5,6 +5,7 @@ import { getTodos } from './controllers/todos';
 import usersControllers from './controllers/users';
 import cardsControllers from './controllers/cards';
 import setsControllers from './controllers/sets';
+import mysteryBoxControllers from './controllers/box';
 import usersMiddlewares from './middlewares/users';
 
 export const init = (app: Application): void => {
@@ -36,4 +37,5 @@ export const init = (app: Application): void => {
   app.post('/cards/:id', usersMiddlewares.isStandardOrAdmin, cardsControllers.createHScard);
   app.post('/decks', usersMiddlewares.isStandardOrAdmin, setsControllers.createHSSet);
   app.post('/decks/:deck_id/cards', usersMiddlewares.isStandardOrAdmin, setsControllers.addCardToSet);
+  app.post('/mystery_box', usersMiddlewares.isStandardOrAdmin, mysteryBoxControllers.addMysteryBox);
 };

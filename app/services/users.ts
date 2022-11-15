@@ -13,7 +13,7 @@ const userRepository = (): Repository<User> => getRepository(User);
 
 export function findUser(options?: FindConditions<User>): Promise<User | undefined> {
   return userRepository().findOne(options, {
-    relations: ['cards']
+    relations: ['cards', 'boxes']
   });
 }
 
