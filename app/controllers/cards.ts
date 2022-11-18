@@ -32,25 +32,25 @@ export async function createHScard(
   const method = 'GET';
   try {
     const userToFind = await findUser(user);
-    const cardByUser = userToFind?.cards.find((card: Card) => card.cardId === params.id);
-    if (userToFind) {
-      if (cardByUser) {
-        logger.error(HTTP_CODES.CONFLICT);
-        res.status(HttpStatus.CONFLICT).send({ message: 'DUPLICATE CARD' });
-      } else {
-        const card = await createCard(userToFind, path, method);
-        if (card) {
-          logger.info(HTTP_CODES.CREATED);
-          res.status(HttpStatus.CREATED).send(successful.CREATED);
-        } else {
-          logger.error(HTTP_CODES.BAD_REQUEST);
-          res.status(HttpStatus.BAD_REQUEST).send(HTTP_CODES.BAD_REQUEST);
-        }
-      }
-    } else {
+    if (!userToFind) {
       logger.error(HTTP_CODES.NOT_FOUND);
       res.status(HttpStatus.NOT_FOUND).send(HTTP_CODES.NOT_FOUND);
     }
+
+    const cardByUser = userToFind?.cards.find((card: Card) => card.cardId === params.id);
+    if (cardByUser) {
+      logger.error(HTTP_CODES.CONFLICT);
+      res.status(HttpStatus.CONFLICT).send({ message: 'DUPLICATE CARD' });
+    }
+
+    const card = await createCard(user, path, method);
+    if (!card) {
+      logger.error(HTTP_CODES.BAD_REQUEST);
+      res.status(HttpStatus.BAD_REQUEST).send({ message: 'USER OR CARD NOT FOUND' });
+    }
+
+    logger.info(HTTP_CODES.CREATED);
+    res.status(HttpStatus.CREATED).send(successful.CREATED);
   } catch (err) {
     logger.error({ error: err, message: HTTP_CODES.INTERNAL_SERVER_ERROR });
     next;
