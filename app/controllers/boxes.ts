@@ -1,8 +1,8 @@
 import { Response, Request, NextFunction } from 'express';
 // import HttpStatus from 'http-status-codes';
 import { HTTP_CODES } from '../constants';
-import { getInfo, getCardByQuality } from '../services/cards';
-import { findBox } from '../services/boxes';
+import { getInfo, getCardByQuality, createCard } from '../services/cards';
+// import { createAndSave } from '../services/boxes';
 // import { getSetInfo } from '../services/sets';
 import { findUser } from '../services/users';
 import logger from '../logger';
@@ -27,34 +27,25 @@ export async function addMysteryBox(
     const random = Math.floor(Math.random() * cardByQuality.length);
     console.log(random, cardByQuality[random]);
 
-    const box = await findBox({
-      relations: ['user'],
-      where: {
-        userId: user.id
-      }
-    });
-    console.log(box);
-
     const userToFind = await findUser(user.id);
+
+    if (!userToFind) {
+      res.send('User not found');
+    }
     console.log(userToFind);
+    console.log('123', user, cardByQuality[random].cardId, method, '123');
 
-    // const box = {
-    //   user: user.id
-    // };
-    // box[0].user = userToFind;
-    // console.log(box);
+    const cardObtenaied = await createCard(user, cardByQuality[random].cardId, method);
 
-    // const boxBuyed = await createAndSave(box);
-    // console.log(boxBuyed);
+    console.log(cardObtenaied);
 
-    // const box = {
-    //   user: user.id
-    // };
-    box[0].user = user;
-    console.log(box);
-    // await createAndSave(box);
+    // try {
+    //   const box = await createAndSave(user);
 
-    // userToFind?.boxes = [box];
+    //   console.log(box);
+    // } catch (error) {
+    //   console.log(error);
+    // }
 
     res.send(`You buy a ${boxToBuy.qualities[0]} MysteryBox with this Card: ${cardByQuality[random]}`);
   } catch (err) {

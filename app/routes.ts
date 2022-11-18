@@ -5,7 +5,7 @@ import { getTodos } from './controllers/todos';
 import usersControllers from './controllers/users';
 import cardsControllers from './controllers/cards';
 import setsControllers from './controllers/sets';
-import mysteryBoxControllers from './controllers/box';
+import mysteryBoxControllers from './controllers/boxes';
 import usersMiddlewares from './middlewares/users';
 
 export const init = (app: Application): void => {

@@ -50,9 +50,17 @@ export const createCard = async (
   apiMethod: string
 ): Promise<Card | undefined> => {
   try {
+    console.log('888', await axios.request(params(apiPath, apiMethod)));
+
     const response = await axios.request(params(apiPath, apiMethod));
+    console.log('889', response);
+
     const card = response.data;
+    console.log('890');
+
     card[0].users = [user];
+    console.log('891');
+
     await createAndSave(card);
     return card;
   } catch (err) {
