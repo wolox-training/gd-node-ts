@@ -108,7 +108,7 @@ export function checkUser(req: Request, res: Response, next: NextFunction): Resp
   return next();
 }
 
-export async function isStandardOrAdmin(
+export async function userExists(
   req: Request,
   res: Response,
   next: NextFunction
@@ -117,14 +117,10 @@ export async function isStandardOrAdmin(
     const token = req.headers.authorization.split(' ')[1];
     const { key } = process.env;
     const user = decodeToken(token, key as string);
-    req.body.user = user;
-    req.body.user.id = user.id;
     const userToFind = await findUser({ email: user.email } as FindConditions<User>);
     if (userToFind) {
-      if (user.role) {
-        return next();
-      }
-      return res.status(400).json({ message: 'Permmission is not allowed' });
+      req.body.user = user;
+      return next();
     }
     return res.status(404).json({ message: 'User not found' });
   }
@@ -141,13 +137,13 @@ export async function isAdmin(
     const { key } = process.env;
     const user = decodeToken(token, key as string);
     const userToFind = await findUser({ email: user.email } as FindConditions<User>);
-    if (userToFind) {
-      if (user.role === 'admin') {
-        return next();
-      }
-      return res.status(400).json({ message: 'Permmission is not allowed' });
+    if (!userToFind) {
+      return res.status(404).json({ message: 'User not found' });
     }
-    return res.status(404).json({ message: 'User not found' });
+    if (userToFind.role === 'admin') {
+      return next();
+    }
+    return res.status(400).json({ message: 'Permmission is not allowed' });
   }
   return res.status(400).json({ message: 'token is required' });
 }
@@ -157,6 +153,6 @@ export default {
   validateSignUp,
   validateSignIn,
   validateSignUpAdmin,
-  isStandardOrAdmin,
+  userExists,
   isAdmin
 };
