@@ -6,7 +6,7 @@ import { findUser } from '../services/users';
 import { Card } from '../models/card';
 import logger from '../logger';
 
-import { successful } from '../constants/messages';
+import { successful, error } from '../constants/messages';
 
 export function getHSinfo(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
   const { path, method } = req;
@@ -31,7 +31,9 @@ export async function createHScard(
   const { user } = req.body;
   const method = 'GET';
   try {
-    const userToFind = await findUser(user);
+    const userToFind = await findUser(user.id, {
+      relations: ['cards']
+    });
     if (!userToFind) {
       logger.error(HTTP_CODES.NOT_FOUND);
       res.status(HttpStatus.NOT_FOUND).send(HTTP_CODES.NOT_FOUND);
@@ -40,13 +42,13 @@ export async function createHScard(
     const cardByUser = userToFind?.cards.find((card: Card) => card.cardId === params.id);
     if (cardByUser) {
       logger.error(HTTP_CODES.CONFLICT);
-      res.status(HttpStatus.CONFLICT).send({ message: 'DUPLICATE CARD' });
+      res.status(HttpStatus.CONFLICT).send();
     }
 
     const card = await createCard(user, path, method);
     if (!card) {
       logger.error(HTTP_CODES.BAD_REQUEST);
-      res.status(HttpStatus.BAD_REQUEST).send({ message: 'USER OR CARD NOT FOUND' });
+      res.status(HttpStatus.BAD_REQUEST).send(error.DUPLICATE_CARD);
     }
 
     logger.info(HTTP_CODES.CREATED);

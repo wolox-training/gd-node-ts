@@ -4,7 +4,7 @@ import { HTTP_CODES, HTTP_STATUS } from '../constants';
 import { getSetInfo, findSet, createSet } from '../services/sets';
 import logger from '../logger';
 
-import { successful } from '../constants/messages';
+import { successful, error } from '../constants/messages';
 
 export async function createHSSet(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
   const path = 'info';
@@ -13,7 +13,13 @@ export async function createHSSet(req: Request, res: Response, next: NextFunctio
   try {
     const classesToFind = await getSetInfo(path, method);
     const classesOfSet = classesToFind.classes;
+
     const setToFind = classesOfSet.find((el: string) => el === setName);
+    if (!setToFind) {
+      logger.info(HTTP_CODES.NOT_FOUND);
+      res.status(HttpStatus.NOT_FOUND).send(HTTP_STATUS.NOT_FOUND);
+    }
+
     const classesExists = await findSet({
       relations: ['user'],
       where: {
@@ -23,24 +29,21 @@ export async function createHSSet(req: Request, res: Response, next: NextFunctio
         }
       }
     });
-    if (setToFind) {
-      if (classesExists.length >= 1) {
-        logger.error(HTTP_CODES.CONFLICT);
-        res.status(HttpStatus.CONFLICT).send({ message: 'Duplicate Set not allow' });
-      } else {
-        const set = {
-          name: setName,
-          // eslint-disable-next-line object-shorthand
-          user: user
-        };
-        await createSet(set);
-        logger.info(HTTP_CODES.CREATED);
-        res.status(HttpStatus.CREATED).send(successful.CREATED);
-      }
-    } else {
-      logger.info(HTTP_CODES.NOT_FOUND);
-      res.status(HttpStatus.NOT_FOUND).send(HTTP_STATUS.NOT_FOUND);
+
+    if (classesExists.length >= 1) {
+      logger.error(HTTP_CODES.CONFLICT);
+      res.status(HttpStatus.CONFLICT).send(error.DUPLICAATE_SET);
     }
+
+    const set = {
+      name: setName,
+      // eslint-disable-next-line object-shorthand
+      user: user
+    };
+    await createSet(set);
+
+    logger.info(HTTP_CODES.CREATED);
+    res.status(HttpStatus.CREATED).send(successful.CREATED);
   } catch (err) {
     logger.error({ error: err, message: HTTP_CODES.INTERNAL_SERVER_ERROR });
     next;
