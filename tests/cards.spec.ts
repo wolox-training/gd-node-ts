@@ -38,7 +38,9 @@ describe('cards', () => {
           .set(tokenStandard)
           .expect(201)
           .then(async (res: request.Response) => {
-            const user = await userRepository.findUser(u2);
+            const user = await userRepository.findUser(u2, {
+              relations: ['cards']
+            });
             expect(res).not.toBeNull();
             expect(res.text).toStrictEqual('Created Successfully');
             expect(user?.cards[0]).toEqual({

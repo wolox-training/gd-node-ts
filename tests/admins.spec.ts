@@ -43,7 +43,7 @@ describe('users', () => {
         .send(u1)
         .expect(400)
         .then((res: request.Response) => {
-          expect(res.body).toStrictEqual({ message: 'token is required' });
+          expect(res.body).toStrictEqual('Token required');
           done();
         });
     });
@@ -54,7 +54,7 @@ describe('users', () => {
         .send(u1)
         .expect(400)
         .then((res: request.Response) => {
-          expect(res.body).toStrictEqual({ message: 'Permmission is not allowed' });
+          expect(res.body).toStrictEqual('Permmission is not allowed');
           done();
         });
     });

@@ -21,7 +21,7 @@ describe('users', () => {
         .get('/users')
         .expect(400)
         .then((res: request.Response) => {
-          expect(res.body).toStrictEqual({ message: 'token is required' });
+          expect(res.body).toStrictEqual('Token required');
           done();
         });
     });
