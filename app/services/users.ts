@@ -12,7 +12,9 @@ import { User } from '../models/user';
 const userRepository = (): Repository<User> => getRepository(User);
 
 export function findUser(options?: FindConditions<User>): Promise<User | undefined> {
-  return userRepository().findOne(options);
+  return userRepository().findOne(options, {
+    relations: ['cards']
+  });
 }
 
 export function createAndSave(user: User): Promise<User> {

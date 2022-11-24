@@ -15,7 +15,7 @@ export const init = (app: Application): void => {
     usersControllers.adminUser
   );
   app.get('/health', healthCheck);
-  app.get('/users', usersMiddlewares.isStandard, usersControllers.getUsers);
+  app.get('/users', usersMiddlewares.userExists, usersControllers.getUsers);
   app.post(
     '/users',
     usersMiddlewares.validateSignUp(),
@@ -32,4 +32,6 @@ export const init = (app: Application): void => {
   app.get('/todos', getTodos);
   app.get('/info', hearthstoneControllers.getHSinfo);
   app.get('/cards', hearthstoneControllers.getHScards);
+  app.post('/cards/:id', usersMiddlewares.userExists, hearthstoneControllers.createHScard);
+  app.post('/decks', hearthstoneControllers.createHSset);
 };

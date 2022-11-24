@@ -1,5 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-
+import { Column, Entity, PrimaryGeneratedColumn, ManyToMany } from 'typeorm';
+import { Card } from '../models/card';
 @Entity({ name: 'User' })
 export class User {
   @PrimaryGeneratedColumn()
@@ -36,4 +36,11 @@ export class User {
     default: 'standard'
   })
   role: string;
+
+  @ManyToMany(
+    () => Card,
+    // eslint-disable-next-line @typescript-eslint/typedef
+    card => card.users
+  )
+  cards: Card[];
 }

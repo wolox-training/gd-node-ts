@@ -108,30 +108,42 @@ export function checkUser(req: Request, res: Response, next: NextFunction): Resp
   return next();
 }
 
-export function isStandard(req: Request, res: Response, next: NextFunction): Response | NextFunction | void {
-  if (req.headers.authorization) {
-    const token = req.headers.authorization.split(' ')[1];
-    const { key } = process.env;
-    const user = decodeToken(token, key as string);
-    if (user.role === 'standard') {
-      return next();
-    }
-    return res.status(400).json({ message: 'Permmission is not allowed' });
-  }
-  return res.status(400).json({ message: 'token is required' });
+export async function userExists(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<Response | NextFunction | void> {
+  if (!req.headers.authorization) return res.status(400).json({ message: 'token is required' });
+
+  const token = req.headers.authorization.split(' ')[1];
+  const { key } = process.env;
+  const user = decodeToken(token, key as string);
+
+  const userToFind = await findUser({ email: user.email } as FindConditions<User>);
+  if (!userToFind) return res.status(404).json({ message: 'User not found' });
+
+  req.body.user = user;
+  return next();
 }
 
-export function isAdmin(req: Request, res: Response, next: NextFunction): Response | NextFunction | void {
-  if (req.headers.authorization) {
-    const token = req.headers.authorization.split(' ')[1];
-    const { key } = process.env;
-    const user = decodeToken(token, key as string);
-    if (user.role === 'admin') {
-      return next();
-    }
-    return res.status(400).json({ message: 'Permmission is not allowed' });
+export async function isAdmin(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<Response | NextFunction | void> {
+  if (!req.headers.authorization) return res.status(400).json({ message: 'token is required' });
+
+  const token = req.headers.authorization.split(' ')[1];
+  const { key } = process.env;
+  const user = decodeToken(token, key as string);
+
+  const userToFind = await findUser({ email: user.email } as FindConditions<User>);
+  if (!userToFind) return res.status(404).json({ message: 'User not found' });
+
+  if (userToFind.role === 'admin') {
+    return next();
   }
-  return res.status(400).json({ message: 'token is required' });
+  return res.status(400).json({ message: 'Permmission is not allowed' });
 }
 
 export default {
@@ -139,6 +151,6 @@ export default {
   validateSignUp,
   validateSignIn,
   validateSignUpAdmin,
-  isStandard,
+  userExists,
   isAdmin
 };

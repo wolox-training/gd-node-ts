@@ -12,7 +12,7 @@ export const u1 = {
   lastname: 'u1',
   email: 'u1@wolox.com',
   password: bcrypt.hashSync('u1U1u1U1', 10),
-  role: 'standard'
+  role: 'admin'
 };
 
 export const u2 = {
@@ -50,13 +50,16 @@ export const u3wolox = {
 
 export const tokenStandard = {
   Authorization:
-    'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJqb2huIiwibGFzdG5hbWUiOiJkb3ciLCJlbWFpbCI6ImpvaG4uZG93QHdvbG94LmNvbSIsInJvbGUiOiJzdGFuZGFyZCJ9.3VLXNit8C6VsMixaHa6Ho-euevoKKZZqwWrn_FkHfsw'
+    'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJ1MiIsImxhc3RuYW1lIjoidTIiLCJlbWFpbCI6InUyQHdvbG94LmNvbSIsInJvbGUiOiJzdGFuZGFyZCIsImNhcmRzIjpbXX0.uFHHoWxbF2KfVvVnXm3PNKHMg5yuLgjoi8Zmi7o_3Bw'
 };
 
 export const tokenAdmin = {
   Authorization:
-    'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJqb2huIiwibGFzdG5hbWUiOiJkb3ciLCJlbWFpbCI6ImpvaG4uZG93QHdvbG94LmNvbSIsInJvbGUiOiJhZG1pbiJ9.MWeUu0OO-bkB0ByLjMXRYiJH5fQ-ykL8iEkN6HNOBRQ'
+    'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJ1MSIsImxhc3RuYW1lIjoidTEiLCJlbWFpbCI6InUxQHdvbG94LmNvbSIsInJvbGUiOiJhZG1pbiJ9.-pixnviYto6dQ3BtwYQyf5v8NXeOOznKAQzRocuf86k'
 };
+
+export const tokenSingIn =
+  'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJ1MiIsImxhc3RuYW1lIjoidTIiLCJlbWFpbCI6InUyQHdvbG94LmNvbSIsInJvbGUiOiJzdGFuZGFyZCIsImNhcmRzIjpbXX0.uFHHoWxbF2KfVvVnXm3PNKHMg5yuLgjoi8Zmi7o_3Bw';
 
 export default {
   u0,
@@ -67,5 +70,6 @@ export default {
   u3fake,
   u3wolox,
   tokenStandard,
-  tokenAdmin
+  tokenAdmin,
+  tokenSingIn
 };
