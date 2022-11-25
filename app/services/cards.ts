@@ -30,6 +30,11 @@ export const getAllCard = async (apiPath: string, apiMethod: string): Promise<Al
   return response.data;
 };
 
+export const getOneCard = async (apiPath: string, apiMethod: string): Promise<Card> => {
+  const response = await axios.request(params(apiPath, apiMethod));
+  return response.data;
+};
+
 const cardRepository = (): Repository<Card> => getRepository(Card);
 
 export function createAndSave(card: Card): Promise<Card> {
@@ -72,5 +77,6 @@ export default {
   getInfo,
   getCardByQuality,
   getAllCard,
+  getOneCard,
   createCard
 };
