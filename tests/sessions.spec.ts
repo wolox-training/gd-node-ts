@@ -16,7 +16,7 @@ describe('session', () => {
         .expect(200)
         .then((res: request.Response) => {
           expect(res.body).toStrictEqual({
-            message: 'Login successfully',
+            message: 'Login Successfully',
             token: tokenSingIn
           });
           done();

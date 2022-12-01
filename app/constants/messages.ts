@@ -1,5 +1,6 @@
-export const successful = {
+export const successMsg = {
   CREATED: 'Created Successfully',
+  LOGIN: 'Login Successfully',
   UPDATED: 'Updated Successfully',
   FOUNDED: 'Founded Successfully',
   LISTED: 'Listed Successfully',
@@ -7,7 +8,8 @@ export const successful = {
   DESTROY: 'Destroy Successfully'
 };
 
-export const error = {
+export const errorMsg = {
+  TOKEN_REQUIRED: 'Token required',
   FAIL: 'Server Fail',
   EMPTY: 'Cannot be empty',
   INVALID_EMAIL: 'Invalid format',
@@ -20,10 +22,15 @@ export const error = {
   WRONG_PARAMS: 'Wrong email or password',
   NOT_CREATED: 'Cannot be created',
   NOT_TOKEN: 'Token was not supplied',
-  NOT_AUTH: 'Unauthorized resources'
+  NOT_AUTH: 'Unauthorized resources',
+  NOT_FOUND_USER: 'Not found User',
+  NOT_FOUND_EMAIL: 'Not found Email',
+  DUPLICATE_CARD: 'Duplicate card',
+  DUPLICAATE_SET: 'Duplicate set',
+  PERMMISSION_NOT_ALLOW: 'Permmission is not allowed'
 };
 
 export default {
-  successful,
-  error
+  successMsg,
+  errorMsg
 };

@@ -1,11 +1,13 @@
 import healthCheckControllers from './healthCheck';
-import hearthstoneControllers from './hearthstone';
+import cardsControllers from './cards';
 import todosControllers from './todos';
 import usersControllers from './users';
+import setsControllers from './sets';
 
 export default {
   healthCheckControllers,
-  hearthstoneControllers,
+  cardsControllers,
   todosControllers,
-  usersControllers
+  usersControllers,
+  setsControllers
 };

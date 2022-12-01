@@ -38,7 +38,9 @@ describe('cards', () => {
           .set(tokenStandard)
           .expect(201)
           .then(async (res: request.Response) => {
-            const user = await userRepository.findUser(u2);
+            const user = await userRepository.findUser(u2, {
+              relations: ['cards']
+            });
             expect(res).not.toBeNull();
             expect(res.text).toStrictEqual('Created Successfully');
             expect(user?.cards[0]).toEqual({
@@ -60,7 +62,7 @@ describe('cards', () => {
               playerClass: 'Death Knight',
               race: null,
               rarity: null,
-              text: `<b>Passive Hero Power</b>
+              text: `<b>Passive</b>
 If you have more minions than your opponent, draw a card at the start of your turn.`,
               type: 'Hero Power'
             });
@@ -75,7 +77,6 @@ If you have more minions than your opponent, draw a card at the start of your tu
           .then((res: request.Response) => {
             // console.log('333', res);
             // const user = await userRepository.findUser(u2);
-            // console.log('334', user);
             // expect(res).not.toBeNull();
             expect(res.text).toStrictEqual('Bad Request');
             done();
