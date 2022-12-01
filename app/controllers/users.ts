@@ -6,8 +6,7 @@ import userService from '../services/users';
 import { getToken } from '../services/session';
 import { User } from '../models/user';
 import { notFoundError } from '../errors';
-import { HTTP_CODES } from '../constants';
-import { successful, error } from '../constants/messages';
+import { HTTP_CODES, successMsg, errorMsg } from '../constants';
 import logger from '../logger';
 
 export function getUsers(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
@@ -38,7 +37,7 @@ export function createUser(req: Request, res: Response, next: NextFunction): Pro
     .then((user: User) => {
       if (user) {
         logger.info(HTTP_CODES.CREATED);
-        res.status(HttpStatus.CREATED).send(successful.CREATED);
+        res.status(HttpStatus.CREATED).send(successMsg.CREATED);
       } else {
         logger.error(HTTP_CODES.BAD_REQUEST);
         res.status(HttpStatus.BAD_REQUEST).send(HTTP_CODES.BAD_REQUEST);
@@ -60,7 +59,7 @@ export async function adminUser(req: Request, res: Response, next: NextFunction)
       .then((user: UpdateResult) => {
         if (user) {
           logger.info(HTTP_CODES.CREATED);
-          res.status(HttpStatus.CREATED).send(successful.UPDATED);
+          res.status(HttpStatus.CREATED).send(successMsg.UPDATED);
         } else {
           logger.error(HTTP_CODES.BAD_REQUEST);
           res.status(HttpStatus.BAD_REQUEST).send(HTTP_CODES.BAD_REQUEST);
@@ -76,7 +75,7 @@ export async function adminUser(req: Request, res: Response, next: NextFunction)
     .then((user: User) => {
       if (user) {
         logger.info(HTTP_CODES.CREATED);
-        res.status(HttpStatus.CREATED).send(successful.CREATED);
+        res.status(HttpStatus.CREATED).send(successMsg.CREATED);
       } else {
         logger.error(HTTP_CODES.BAD_REQUEST);
         res.status(HttpStatus.BAD_REQUEST).send(HTTP_CODES.BAD_REQUEST);
@@ -93,7 +92,7 @@ export function getUserById(req: Request, res: Response, next: NextFunction): Pr
     .findUser({ id: parseInt(req.params.id) })
     .then((user: User) => {
       if (!user) {
-        throw notFoundError(error.NOT_FOUND_USER);
+        throw notFoundError(errorMsg.NOT_FOUND_USER);
       }
       return res.send(user);
     })
@@ -105,7 +104,7 @@ export function getUserByEmail(req: Request, res: Response, next: NextFunction):
     .findUser({ email: req.body.email })
     .then((user: User) => {
       if (!user) {
-        throw notFoundError(error.NOT_FOUND_EMAIL);
+        throw notFoundError(errorMsg.NOT_FOUND_EMAIL);
       }
       const userObject = { ...user } as Partial<User>;
       delete userObject.password;
@@ -113,7 +112,7 @@ export function getUserByEmail(req: Request, res: Response, next: NextFunction):
       const key = process.env.key as string;
       const algorithm = process.env.algorithm as string;
       const token = getToken(payload, key, algorithm);
-      return res.status(200).send({ message: successful.LOGIN, token });
+      return res.status(200).send({ message: successMsg.LOGIN, token });
     })
     .catch(next);
 }

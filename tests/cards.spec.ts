@@ -62,7 +62,7 @@ describe('cards', () => {
               playerClass: 'Death Knight',
               race: null,
               rarity: null,
-              text: `<b>Passive Hero Power</b>
+              text: `<b>Passive</b>
 If you have more minions than your opponent, draw a card at the start of your turn.`,
               type: 'Hero Power'
             });

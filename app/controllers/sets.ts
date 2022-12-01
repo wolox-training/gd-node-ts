@@ -1,10 +1,8 @@
 import { Response, Request, NextFunction } from 'express';
 import HttpStatus from 'http-status-codes';
-import { HTTP_CODES, HTTP_STATUS } from '../constants';
+import { HTTP_CODES, HTTP_STATUS, successMsg, errorMsg } from '../constants';
 import { getSetInfo, findSet, createSet } from '../services/sets';
 import logger from '../logger';
-
-import { successful, error } from '../constants/messages';
 
 export async function createHSSet(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
   const path = 'info';
@@ -32,18 +30,17 @@ export async function createHSSet(req: Request, res: Response, next: NextFunctio
 
     if (classesExists.length >= 1) {
       logger.error(HTTP_CODES.CONFLICT);
-      res.status(HttpStatus.CONFLICT).send(error.DUPLICAATE_SET);
+      res.status(HttpStatus.CONFLICT).send(errorMsg.DUPLICAATE_SET);
     }
 
     const set = {
       name: setName,
-      // eslint-disable-next-line object-shorthand
-      user: user
+      user
     };
     await createSet(set);
 
     logger.info(HTTP_CODES.CREATED);
-    res.status(HttpStatus.CREATED).send(successful.CREATED);
+    res.status(HttpStatus.CREATED).send(successMsg.CREATED);
   } catch (err) {
     logger.error({ error: err, message: HTTP_CODES.INTERNAL_SERVER_ERROR });
     next;

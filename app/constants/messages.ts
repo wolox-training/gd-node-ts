@@ -1,4 +1,4 @@
-export const successful = {
+export const successMsg = {
   CREATED: 'Created Successfully',
   LOGIN: 'Login Successfully',
   UPDATED: 'Updated Successfully',
@@ -8,7 +8,7 @@ export const successful = {
   DESTROY: 'Destroy Successfully'
 };
 
-export const error = {
+export const errorMsg = {
   TOKEN_REQUIRED: 'Token required',
   FAIL: 'Server Fail',
   EMPTY: 'Cannot be empty',
@@ -31,6 +31,6 @@ export const error = {
 };
 
 export default {
-  successful,
-  error
+  successMsg,
+  errorMsg
 };
