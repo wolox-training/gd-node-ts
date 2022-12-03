@@ -6,39 +6,39 @@ import { decodeToken } from '../services/session';
 
 import { User } from '../models/user';
 import { findUser } from '../services/users';
-import { error } from '../constants/messages';
+import { errorMsg, HTTP_CODES } from '../constants';
 
 export function validateSignUp(): ValidationChain[] {
   return [
     body('username')
       .notEmpty()
-      .withMessage(error.EMPTY),
+      .withMessage(errorMsg.EMPTY),
     body('lastname')
       .notEmpty()
-      .withMessage(error.EMPTY),
+      .withMessage(errorMsg.EMPTY),
     body('email')
       .notEmpty()
-      .withMessage(error.EMPTY)
+      .withMessage(errorMsg.EMPTY)
       .isEmail()
-      .withMessage(error.INVALID_EMAIL)
+      .withMessage(errorMsg.INVALID_EMAIL)
       .custom((value: string) => {
         const withDomain = value.split('@');
         if (withDomain[1] === undefined) {
-          return Promise.reject(error.INVALID_EMAIL);
+          return Promise.reject(errorMsg.INVALID_EMAIL);
         } else if (withDomain[1] !== 'wolox.com') {
-          return Promise.reject(error.INVALID_DOMAIN);
+          return Promise.reject(errorMsg.INVALID_DOMAIN);
         }
         return value;
       })
       .custom(async (value: string) => {
         const user = await findUser({ email: value } as FindConditions<User>);
         if (user) {
-          throw new Error(error.EMAIL_DUPLICATE);
+          throw new Error(errorMsg.EMAIL_DUPLICATE);
         }
       }),
     body('password')
       .matches(/^((?=\S*?[A-Z])(?=\S*?[a-z])(?=\S*?[0-9]).{7,})\S$/gm)
-      .withMessage(error.PASSWORD_ALPHA)
+      .withMessage(errorMsg.PASSWORD_ALPHA)
   ];
 }
 
@@ -46,27 +46,27 @@ export function validateSignIn(): ValidationChain[] {
   return [
     body('email')
       .notEmpty()
-      .withMessage(error.EMPTY)
+      .withMessage(errorMsg.EMPTY)
       .isEmail()
-      .withMessage(error.INVALID_EMAIL)
+      .withMessage(errorMsg.INVALID_EMAIL)
       .custom((value: string) => {
         const withDomain = value.split('@');
         if (withDomain[1] === undefined) {
-          return Promise.reject(error.INVALID_EMAIL);
+          return Promise.reject(errorMsg.INVALID_EMAIL);
         } else if (withDomain[1] !== 'wolox.com') {
-          return Promise.reject(error.INVALID_DOMAIN);
+          return Promise.reject(errorMsg.INVALID_DOMAIN);
         }
         return value;
       }),
     body('password')
       .matches(/^((?=\S*?[A-Z])(?=\S*?[a-z])(?=\S*?[0-9]).{7,})\S$/gm)
-      .withMessage(error.PASSWORD_ALPHA)
+      .withMessage(errorMsg.PASSWORD_ALPHA)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .custom(async (value: string, { req }: any) => {
         const user = await findUser({ email: req.body.email } as FindConditions<User>);
         if (user) {
           const isSamePassword = bcrypt.compareSync(value, user.password);
-          if (!isSamePassword) throw new Error(error.WRONG_PARAMS);
+          if (!isSamePassword) throw new Error(errorMsg.WRONG_PARAMS);
         }
       })
   ];
@@ -76,59 +76,54 @@ export function validateSignUpAdmin(): ValidationChain[] {
   return [
     body('username')
       .notEmpty()
-      .withMessage(error.EMPTY),
+      .withMessage(errorMsg.EMPTY),
     body('lastname')
       .notEmpty()
-      .withMessage(error.EMPTY),
+      .withMessage(errorMsg.EMPTY),
     body('email')
       .notEmpty()
-      .withMessage(error.EMPTY)
+      .withMessage(errorMsg.EMPTY)
       .isEmail()
-      .withMessage(error.INVALID_EMAIL)
+      .withMessage(errorMsg.INVALID_EMAIL)
       .custom((value: string) => {
         const withDomain = value.split('@');
         if (withDomain[1] === undefined) {
-          return Promise.reject(error.INVALID_EMAIL);
+          return Promise.reject(errorMsg.INVALID_EMAIL);
         } else if (withDomain[1] !== 'wolox.com') {
-          return Promise.reject(error.INVALID_DOMAIN);
+          return Promise.reject(errorMsg.INVALID_DOMAIN);
         }
         return value;
       }),
     body('password')
       .matches(/^((?=\S*?[A-Z])(?=\S*?[a-z])(?=\S*?[0-9]).{7,})\S$/gm)
-      .withMessage(error.PASSWORD_ALPHA)
+      .withMessage(errorMsg.PASSWORD_ALPHA)
   ];
 }
 
 export function checkUser(req: Request, res: Response, next: NextFunction): Response | NextFunction | void {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+    return res.status(HTTP_CODES.BAD_REQUEST).json({ errors: errors.array() });
   }
   return next();
 }
 
-export async function isStandardOrAdmin(
+export async function userExists(
   req: Request,
   res: Response,
   next: NextFunction
 ): Promise<Response | NextFunction | void> {
-  if (req.headers.authorization) {
-    const token = req.headers.authorization.split(' ')[1];
-    const { key } = process.env;
-    const user = decodeToken(token, key as string);
-    req.body.user = user;
-    req.body.user.id = user.id;
-    const userToFind = await findUser({ email: user.email } as FindConditions<User>);
-    if (userToFind) {
-      if (user.role) {
-        return next();
-      }
-      return res.status(400).json({ message: 'Permmission is not allowed' });
-    }
-    return res.status(404).json({ message: 'User not found' });
-  }
-  return res.status(400).json({ message: 'token is required' });
+  if (!req.headers.authorization) return res.status(HTTP_CODES.BAD_REQUEST).json(errorMsg.TOKEN_REQUIRED);
+
+  const token = req.headers.authorization.split(' ')[1];
+  const { key } = process.env;
+  const user = decodeToken(token, key as string);
+
+  const userToFind = await findUser({ email: user.email } as FindConditions<User>);
+  if (!userToFind) return res.status(HTTP_CODES.NOT_FOUND).json(errorMsg.NOT_FOUND_USER);
+
+  req.body.user = user;
+  return next();
 }
 
 export async function isAdmin(
@@ -136,20 +131,19 @@ export async function isAdmin(
   res: Response,
   next: NextFunction
 ): Promise<Response | NextFunction | void> {
-  if (req.headers.authorization) {
-    const token = req.headers.authorization.split(' ')[1];
-    const { key } = process.env;
-    const user = decodeToken(token, key as string);
-    const userToFind = await findUser({ email: user.email } as FindConditions<User>);
-    if (userToFind) {
-      if (user.role === 'admin') {
-        return next();
-      }
-      return res.status(400).json({ message: 'Permmission is not allowed' });
-    }
-    return res.status(404).json({ message: 'User not found' });
+  if (!req.headers.authorization) return res.status(HTTP_CODES.BAD_REQUEST).json(errorMsg.TOKEN_REQUIRED);
+
+  const token = req.headers.authorization.split(' ')[1];
+  const { key } = process.env;
+  const user = decodeToken(token, key as string);
+
+  const userToFind = await findUser({ email: user.email } as FindConditions<User>);
+  if (!userToFind) return res.status(HTTP_CODES.NOT_FOUND).json(errorMsg.NOT_FOUND_USER);
+
+  if (userToFind.role === 'admin') {
+    return next();
   }
-  return res.status(400).json({ message: 'token is required' });
+  return res.status(HTTP_CODES.BAD_REQUEST).json(errorMsg.PERMMISSION_NOT_ALLOW);
 }
 
 export default {
@@ -157,6 +151,6 @@ export default {
   validateSignUp,
   validateSignIn,
   validateSignUpAdmin,
-  isStandardOrAdmin,
+  userExists,
   isAdmin
 };

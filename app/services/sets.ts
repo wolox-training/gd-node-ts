@@ -1,10 +1,10 @@
 import { Repository, getRepository, FindManyOptions } from 'typeorm';
-import axios, { AxiosRequestConfig } from 'axios';
+import axios, { AxiosRequestConfig, Method } from 'axios';
 import { Set } from '../models/set';
 // import { User } from '../models/user';
 import { Info, InfoSet } from '../constants';
 
-const params = (apiPath: string, apiMethod: string): object =>
+const params = (apiPath: string, apiMethod: Method): object =>
   ({
     method: apiMethod,
     url: apiPath,
@@ -17,7 +17,7 @@ const params = (apiPath: string, apiMethod: string): object =>
 
 const setRepository = (): Repository<Set> => getRepository(Set);
 
-export const getSetInfo = async (apiPath: string, apiMethod: string): Promise<Info> => {
+export const getSetInfo = async (apiPath: string, apiMethod: Method): Promise<Info> => {
   const response = await axios.request(params(apiPath, apiMethod));
   return response.data;
 };
@@ -39,7 +39,7 @@ export const createSet = async (set: InfoSet): Promise<InfoSet | undefined> => {
   }
 };
 
-export const addCard = async (apiPath: string, apiMethod: string): Promise<Info> => {
+export const addCard = async (apiPath: string, apiMethod: Method): Promise<Info> => {
   const response = await axios.request(params(apiPath, apiMethod));
   return response.data;
 };

@@ -8,10 +8,6 @@ describe('cards', () => {
     userRepository.createMany([u1, u2]);
     jest.setTimeout(60000);
   });
-  // afterEach(() => {
-  //   jest.clearAllMocks();
-  //   jest.resetAllMocks();
-  // });
   describe('/info GET', () => {
     it('should get info cards', (done: jest.DoneCallback) => {
       request(app)
@@ -36,13 +32,15 @@ describe('cards', () => {
         });
     });
     describe('/cards/:id POST', () => {
-      it.skip('should return card with id 1', (done: jest.DoneCallback) => {
+      it('should return card with id 1', (done: jest.DoneCallback) => {
         request(app)
           .post('/cards/Story_10_Arthas_007p')
           .set(tokenStandard)
           .expect(201)
           .then(async (res: request.Response) => {
-            const user = await userRepository.findUser(u2);
+            const user = await userRepository.findUser(u2, {
+              relations: ['cards']
+            });
             expect(res).not.toBeNull();
             expect(res.text).toStrictEqual('Created Successfully');
             expect(user?.cards[0]).toEqual({
@@ -64,19 +62,20 @@ describe('cards', () => {
               playerClass: 'Death Knight',
               race: null,
               rarity: null,
-              text: `<b>Passive Hero Power</b>
+              text: `<b>Passive</b>
 If you have more minions than your opponent, draw a card at the start of your turn.`,
               type: 'Hero Power'
             });
             done();
           });
       });
-      it('should return error card with id 1', (done: jest.DoneCallback) => {
+      it.skip('should return error card with id 1', (done: jest.DoneCallback) => {
         request(app)
           .post('/cards/prueba')
           .set(tokenStandard)
           .expect(400)
           .then((res: request.Response) => {
+            // console.log('333', res);
             // const user = await userRepository.findUser(u2);
             // expect(res).not.toBeNull();
             expect(res.text).toStrictEqual('Bad Request');
