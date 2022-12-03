@@ -35,4 +35,5 @@ export const init = (app: Application): void => {
   app.get('/cards', cardsControllers.getHScards);
   app.post('/cards/:id', usersMiddlewares.userExists, cardsControllers.createHScard);
   app.post('/decks', usersMiddlewares.userExists, setsControllers.createHSSet);
+  app.post('/decks/:deck_id/cards', usersMiddlewares.userExists, setsControllers.addCardToSet);
 };

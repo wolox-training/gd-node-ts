@@ -1,4 +1,4 @@
-import { Repository, getRepository, FindConditions } from 'typeorm';
+import { Repository, getRepository, FindConditions, FindManyOptions } from 'typeorm';
 import axios, { AxiosRequestConfig, Method } from 'axios';
 import { Card } from '../models/card';
 import { User } from '../models/user';
@@ -33,6 +33,10 @@ export function createAndSave(card: Card): Promise<Card> {
 
 export function findCard(options?: FindConditions<Card>): Promise<Card | undefined> {
   return cardRepository().findOne(options);
+}
+
+export function getCard(options?: FindManyOptions<Card>): Promise<Card[]> {
+  return cardRepository().find(options);
 }
 
 export const createCard = async (
