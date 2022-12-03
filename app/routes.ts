@@ -16,7 +16,7 @@ export const init = (app: Application): void => {
     usersControllers.adminUser
   );
   app.get('/health', healthCheck);
-  app.get('/users', usersMiddlewares.isStandardOrAdmin, usersControllers.getUsers);
+  app.get('/users', usersMiddlewares.userExists, usersControllers.getUsers);
   app.post(
     '/users',
     usersMiddlewares.validateSignUp(),
@@ -33,7 +33,7 @@ export const init = (app: Application): void => {
   app.get('/todos', getTodos);
   app.get('/info', cardsControllers.getHSinfo);
   app.get('/cards', cardsControllers.getHScards);
-  app.post('/cards/:id', usersMiddlewares.isStandardOrAdmin, cardsControllers.createHScard);
-  app.post('/decks', usersMiddlewares.isStandardOrAdmin, setsControllers.createHSSet);
-  app.post('/decks/:deck_id/cards', usersMiddlewares.isStandardOrAdmin, setsControllers.addCardToSet);
+  app.post('/cards/:id', usersMiddlewares.userExists, cardsControllers.createHScard);
+  app.post('/decks', usersMiddlewares.userExists, setsControllers.createHSSet);
+  app.post('/decks/:deck_id/cards', usersMiddlewares.userExists, setsControllers.addCardToSet);
 };

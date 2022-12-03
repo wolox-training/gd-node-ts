@@ -59,7 +59,7 @@ export const tokenAdmin = {
 };
 
 export const tokenSingIn =
-  'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJ1MiIsImxhc3RuYW1lIjoidTIiLCJlbWFpbCI6InUyQHdvbG94LmNvbSIsInJvbGUiOiJzdGFuZGFyZCIsImNhcmRzIjpbXX0.uFHHoWxbF2KfVvVnXm3PNKHMg5yuLgjoi8Zmi7o_3Bw';
+  'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJ1MiIsImxhc3RuYW1lIjoidTIiLCJlbWFpbCI6InUyQHdvbG94LmNvbSIsInJvbGUiOiJzdGFuZGFyZCJ9.BFrDPfNFRGljZ2vybBE_Wke7yo0xx_uHgD2bEuD2p7U';
 
 export default {
   u0,

@@ -1,6 +1,7 @@
 import {
   getRepository,
   FindManyOptions,
+  FindOneOptions,
   FindConditions,
   Repository,
   DeepPartial,
@@ -11,10 +12,11 @@ import { User } from '../models/user';
 
 const userRepository = (): Repository<User> => getRepository(User);
 
-export function findUser(options?: FindConditions<User>): Promise<User | undefined> {
-  return userRepository().findOne(options, {
-    relations: ['cards']
-  });
+export function findUser(
+  conditions?: FindConditions<User>,
+  options?: FindOneOptions<User>
+): Promise<User | undefined> {
+  return userRepository().findOne(conditions, options);
 }
 
 export function createAndSave(user: User): Promise<User> {

@@ -1,10 +1,10 @@
 import { Repository, getRepository, FindConditions, FindManyOptions } from 'typeorm';
-import axios, { AxiosRequestConfig } from 'axios';
+import axios, { AxiosRequestConfig, Method } from 'axios';
 import { Card } from '../models/card';
 import { User } from '../models/user';
 import { Allcards, Info } from '../constants';
 
-const params = (apiPath: string, apiMethod: string): object =>
+const params = (apiPath: string, apiMethod: Method): object =>
   ({
     method: apiMethod,
     url: apiPath,
@@ -15,12 +15,12 @@ const params = (apiPath: string, apiMethod: string): object =>
     }
   } as AxiosRequestConfig);
 
-export const getInfo = async (apiPath: string, apiMethod: string): Promise<Info> => {
+export const getInfo = async (apiPath: string, apiMethod: Method): Promise<Info> => {
   const response = await axios.request(params(apiPath, apiMethod));
   return response.data;
 };
 
-export const getAllCard = async (apiPath: string, apiMethod: string): Promise<Allcards> => {
+export const getAllCard = async (apiPath: string, apiMethod: Method): Promise<Allcards> => {
   const response = await axios.request(params(apiPath, apiMethod));
   return response.data;
 };
@@ -42,7 +42,7 @@ export function getCard(options?: FindManyOptions<Card>): Promise<Card[]> {
 export const createCard = async (
   user: User,
   apiPath: string,
-  apiMethod: string
+  apiMethod: Method
 ): Promise<Card | undefined> => {
   try {
     const response = await axios.request(params(apiPath, apiMethod));
