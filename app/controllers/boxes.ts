@@ -51,9 +51,11 @@ export async function addMysteryBox(
     }
 
     const cardObtenaied = await createAndSave(cardToFind);
-    
+
     logger.info(successMsg.CREATED);
-    res.status(HTTP_CODES.CREATED).send(`You buy a ${boxToBuy.qualities[0]} MysteryBox with this Card: ${cardObtenaied[0].cardId}`);
+    res
+      .status(HTTP_CODES.CREATED)
+      .send(`You buy a ${boxToBuy.qualities[0]} MysteryBox with this Card: ${cardObtenaied[0].cardId}`);
   } catch (err) {
     logger.error({ error: err, message: HTTP_CODES.INTERNAL_SERVER_ERROR });
     next;
