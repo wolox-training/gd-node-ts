@@ -1,4 +1,4 @@
-import { Repository, getRepository, FindConditions, FindManyOptions } from 'typeorm';
+import { Repository, getRepository, FindOneOptions, FindManyOptions } from 'typeorm';
 import axios, { AxiosRequestConfig, Method } from 'axios';
 import { Card } from '../models/card';
 import { User } from '../models/user';
@@ -41,8 +41,8 @@ export function createAndSave(card: Card): Promise<Card> {
   return cardRepository().save(card);
 }
 
-export function findCard(options?: FindConditions<Card>): Promise<Card | undefined> {
-  return cardRepository().findOne(options);
+export function findCard(id?: number, options?: FindOneOptions<Card>): Promise<Card | undefined> {
+  return cardRepository().findOne(id, options);
 }
 
 export function getCard(options?: FindManyOptions<Card>): Promise<Card[]> {

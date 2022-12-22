@@ -1,14 +1,12 @@
 import { Response, Request, NextFunction } from 'express';
-// import HttpStatus from 'http-status-codes';
-import { HTTP_CODES, HTTP_STATUS, errorMsg, successMsg } from '../constants';
+import { HTTP_CODES, HTTP_STATUS, errorMsg, successMsg, Common } from '../constants';
 import { getInfo, getCardByQuality, getOneCard, createAndSave } from '../services/cards';
-import { createBox } from '../services/boxes';
-// import { getSetInfo } from '../services/sets';
+import { createBox, countBox } from '../services/boxes';
 import { findUser } from '../services/users';
+import { Box } from '../models/box';
 import logger from '../logger';
 
-// import { successful } from '../constants/messages';
-
+// eslint-disable-next-line max-statements
 export async function addMysteryBox(
   req: Request,
   res: Response,
@@ -18,44 +16,54 @@ export async function addMysteryBox(
   const method = 'GET';
   const { user } = req.body;
   try {
-    const boxToBuy = await getInfo(path, method);
-
-    const pathQualities = `cards/qualities/${boxToBuy.qualities[0]}`;
-
-    const cardByQuality = await getCardByQuality(pathQualities, method);
-
-    const random = Math.floor(Math.random() * cardByQuality.length);
-
     const userToFind = await findUser(user.id);
-
     if (!userToFind) {
       logger.info(errorMsg.NOT_FOUND_USER);
       res.status(HTTP_CODES.NOT_FOUND).send(HTTP_STATUS.NOT_FOUND);
     }
 
-    const cardToFind = await getOneCard(`cards/${cardByQuality[random].cardId}`, method);
+    const evaluatePossibilities = async (possibility: number): Promise<Box | void> => {
+      const boxToBuy = await getInfo(path, method);
+      const allCard: Common[] = [];
 
-    const box = {
-      user,
-      card: cardToFind
+      for (let i = 0; i < possibility; i++) {
+        const pathQualities = `cards/qualities/${boxToBuy.qualities[i]}`;
+        const cardByQuality = await getCardByQuality(pathQualities, method);
+        cardByQuality.map((element: Common) => allCard.push(element));
+      }
+
+      const random = Math.floor(Math.random() * allCard.length);
+      const cardToFind = await getOneCard(`cards/${allCard[random].cardId}`, method);
+
+      await createAndSave(cardToFind);
+
+      const box = {
+        user,
+        card: cardToFind
+      };
+
+      box.user = userToFind;
+
+      const boxBuyed = await createBox(box);
+
+      return boxBuyed;
     };
 
-    box.user = userToFind;
-    box.card = cardToFind;
+    const boxToCount = await countBox();
 
-    const boxBuyed = await createBox(box);
-
-    if (!boxBuyed) {
-      logger.info(errorMsg.FAIL);
-      res.status(HTTP_CODES.INTERNAL_SERVER_ERROR).send(HTTP_STATUS.INTERNAL_SERVER_ERROR);
+    if (boxToCount[1] > 19) {
+      evaluatePossibilities(4);
+    } else if (boxToCount[1] > 14) {
+      evaluatePossibilities(3);
+    } else if (boxToCount[1] > 9) {
+      evaluatePossibilities(2);
+    } else if (boxToCount[1] > 4) {
+      evaluatePossibilities(1);
+    } else {
+      evaluatePossibilities(0);
     }
-
-    const cardObtenaied = await createAndSave(cardToFind);
-
     logger.info(successMsg.CREATED);
-    res
-      .status(HTTP_CODES.CREATED)
-      .send(`You buy a ${boxToBuy.qualities[0]} MysteryBox with this Card: ${cardObtenaied[0].cardId}`);
+    res.status(HTTP_CODES.CREATED).send(successMsg.CREATED);
   } catch (err) {
     logger.error({ error: err, message: HTTP_CODES.INTERNAL_SERVER_ERROR });
     next;

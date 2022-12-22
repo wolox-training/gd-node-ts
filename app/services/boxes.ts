@@ -9,6 +9,10 @@ export function findBox(options?: FindManyOptions<Box>): Promise<Box[]> {
   return boxRepository().find(options);
 }
 
+export function countBox(options?: FindManyOptions<Box>): Promise<[Box[], number]> {
+  return boxRepository().findAndCount(options);
+}
+
 export function createAndSave(box: BoxMistery): Promise<Box> {
   return boxRepository().save(box);
 }
@@ -24,5 +28,6 @@ export const createBox = async (box: BoxMistery): Promise<Box | undefined> => {
 
 export default {
   findBox,
+  countBox,
   createBox
 };
