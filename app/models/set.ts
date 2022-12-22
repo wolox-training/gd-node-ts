@@ -1,5 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, OneToMany } from 'typeorm';
 import { User } from '../models/user';
+import { Card } from '../models/card';
+
 @Entity({ name: 'Set' })
 export class Set {
   @PrimaryGeneratedColumn()
@@ -20,4 +22,11 @@ export class Set {
     }
   )
   user: User;
+
+  @OneToMany(
+    () => Card,
+    // eslint-disable-next-line @typescript-eslint/typedef
+    card => card.set
+  )
+  cards: Card[];
 }
