@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import HttpStatus from 'http-status-codes';
 
 import { UpdateResult } from 'typeorm';
+import { welcomeEmail } from '../services/internals/welcomeEmail';
 import userService from '../services/users';
 import { getToken } from '../services/session';
 import { User } from '../models/user';
@@ -36,6 +37,14 @@ export function createUser(req: Request, res: Response, next: NextFunction): Pro
     .createAndSave({ username, lastname, email, password } as User)
     .then((user: User) => {
       if (user) {
+        const userParams = {
+          from: 'Welcom New Joiners <welcomNewJoiners@wolox.com>',
+          to: user.email,
+          subject: 'Welcom to Wolox ✔',
+          text: 'Welcom New Joiners',
+          html: '<b>Welcom New Joiner</b>'
+        };
+        welcomeEmail(userParams);
         logger.info(HTTP_CODES.CREATED);
         res.status(HttpStatus.CREATED).send(successMsg.CREATED);
       } else {
