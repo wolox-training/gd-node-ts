@@ -21,7 +21,6 @@ export const welcomeEmail = async (userParams: EmailParams): Promise<SMTPTranspo
     html: userParams.html
   });
   if (info) {
-    console.log(info);
     return info;
   }
   throw new Error('Email not Delivered');

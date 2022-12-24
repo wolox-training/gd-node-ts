@@ -20,11 +20,9 @@ const params = (apiPath: string, apiMethod: Method): object =>
 
 export const getInfo = async (apiPath: string, apiMethod: Method): Promise<Info> => {
   const value: Info | undefined = myCache.get('myKey');
-  console.log('888', value);
   if (value === undefined) {
     const response = await axios.request(params(apiPath, apiMethod));
-    const result = myCache.set('myKey', response.data, 10000);
-    console.log('999', result);
+    myCache.set('myKey', response.data, 10000);
     return response.data;
   }
   return value;
