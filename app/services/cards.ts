@@ -1,8 +1,11 @@
 import { Repository, getRepository, FindOneOptions, FindManyOptions } from 'typeorm';
 import axios, { AxiosRequestConfig, Method } from 'axios';
+import NodeCache from 'node-cache';
 import { Card } from '../models/card';
 import { User } from '../models/user';
 import { Allcards, Info, Common } from '../constants';
+
+const myCache = new NodeCache({ stdTTL: 100, checkperiod: 120 });
 
 const params = (apiPath: string, apiMethod: Method): object =>
   ({
@@ -16,8 +19,15 @@ const params = (apiPath: string, apiMethod: Method): object =>
   } as AxiosRequestConfig);
 
 export const getInfo = async (apiPath: string, apiMethod: Method): Promise<Info> => {
-  const response = await axios.request(params(apiPath, apiMethod));
-  return response.data;
+  const value: Info | undefined = myCache.get('myKey');
+  console.log('888', value);
+  if (value === undefined) {
+    const response = await axios.request(params(apiPath, apiMethod));
+    const result = myCache.set('myKey', response.data, 10000);
+    console.log('999', result);
+    return response.data;
+  }
+  return value;
 };
 
 export const getCardByQuality = async (apiPath: string, apiMethod: Method): Promise<Common[]> => {

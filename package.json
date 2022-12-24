@@ -73,6 +73,7 @@
     "express-wolox-logger": "^2.0.0",
     "http-status-codes": "^1.4.0",
     "jwt-simple": "^0.5.1",
+    "node-cache": "^5.1.2",
     "nodemailer": "^6.8.0",
     "pg": "^7.18.2",
     "reflect-metadata": "^0.1.13",
